@@ -70,8 +70,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableData',
-			'ExtendName':'表数据',
-			'ExtendAbout':'数据查阅、修改、删除操作扩展。注意：此扩展用于响应Sql查询结果不可删除。',
+			'ExtendName':L.TableData,
+			'ExtendAbout':L.TableDataAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -321,7 +321,7 @@ var TableData = function ()
 				this.ThItem[i].WhereMarked = false;							// Sql Where 条件　marked
 				
 				// 有OrderBy 加个图标咯~
-				var order_by_title = OrderByType == 'DESC' ? '递减' : '递增';
+				var order_by_title = OrderByType == 'DESC' ? L.DESC : L.ASC;
 				var add_OrderBy_ico = CanEdit ? (this.ThItem[i].name == OrderBy.val ? true : false) : (this.ThItem[i].table == OrderBy.table && this.ThItem[i].name == OrderBy.val ? true: false); 
 				if(add_OrderBy_ico)  C(this.ThItem[i].ATag, 'In', C('a', {'className':'ico2 ico_' + OrderByType, 'title':order_by_title}));
 				
@@ -385,7 +385,7 @@ var TableData = function ()
 		this.ActionTr = C('tr');
 
 		// 定义操作的Tr *********************************************************************************************************
-		this.ActionTr.AllSelect = C('a','In','全选');
+		this.ActionTr.AllSelect = C('a','In',L.SelectAll);
 		with(this)
 		{
 			ActionTr.AllSelect.onclick = function ()
@@ -397,7 +397,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.NoAllSelect = C('a','In','全不选');
+		this.ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 		with(this)
 		{
 			ActionTr.NoAllSelect.onclick = function ()
@@ -409,7 +409,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.OppositeSelect = C('a','In','反选');
+		this.ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 		with(this)
 		{
 			ActionTr.OppositeSelect.onclick = function ()
@@ -421,10 +421,10 @@ var TableData = function ()
 			}
 		}
 		
-		this.ActionTr.ListSelect = C('a', {'innerHTML':'选择','className':'ico ico_select'});
-		this.ActionTr.edit = C('a', {'innerHTML':'修改','className':'ico ico_edit','title':'修改选择项'});
-		this.ActionTr.del = C('a', {'innerHTML':'删除','className': 'ico ico_del','title':'删除选择项'});
-		this.ActionTr.save = C('a',{'innerHTML':'保存','className':'ico ico_save', 'title':'保存编辑项'});
+		this.ActionTr.ListSelect = C('a', {'innerHTML':L.Selects,'className':'ico ico_select'});
+		this.ActionTr.edit = C('a', {'innerHTML':L.Edit,'className':'ico ico_edit','title':L.EditSelect});
+		this.ActionTr.del = C('a', {'innerHTML':L.Del,'className': 'ico ico_del','title':L.DeleteSelectedItem});
+		this.ActionTr.save = C('a',{'innerHTML':L.Save,'className':'ico ico_save', 'title':L.SaveEditItem});
 
 		with(this)
 		{
@@ -447,7 +447,7 @@ var TableData = function ()
 				}
 				if(all_sql == '') return false;
 				SqlSubmitFormObject.operation_sql_text.value = all_sql;
-				SqlSubmitFormObject.UpOperationSqlNotice('确定删除以下条件的数据?' , 0);
+				SqlSubmitFormObject.UpOperationSqlNotice(L.ConfirmDelData , 0);
 				SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 			}
 			// 选中行编辑 ************************
@@ -520,7 +520,7 @@ var TableData = function ()
 				}
 				if(!sum_SqlSet)
 				{
-					alert('数据无更改不需保存。');
+					alert(L.NoChangeData);
 					return true;	// 没任何更改返回吧。
 				}
 
@@ -608,8 +608,8 @@ var TableData = function ()
 				break;	// 一次显示this.OnceShow条记录
 			}
 			
-			this.Item[i].edit = C('a', {'innerHTML':'修改','className':'ico2 ico_edit2','title':'修改这条记录'});
-			this.Item[i].del = C('a', {'innerHTML':'删除','className':'ico2 ico_del2','title':'删除这条记录'});
+			this.Item[i].edit = C('a', {'innerHTML':L.Edit,'className':'ico2 ico_edit2','title':L.EditThisRow});
+			this.Item[i].del = C('a', {'innerHTML':L.Del,'className':'ico2 ico_del2','title':L.DelThisRow});
 			this.Item[i].edit.key = i;	// 下标
 			this.Item[i].del.key = i;	// 下标
 			
@@ -632,7 +632,7 @@ var TableData = function ()
 			{
 				//  var table_info_tmp = TableFieldList[Thi];			 // 取字段信息 (因为单独取某字段记录就与标题字段不对应了 )
 				var table_info_tmp = table_info(this.ThItem[Thi].name);	 // 取字段信息
-				var field_val = (this.Item[i].arr[Thi] != null && this.Item[i].arr[Thi].length > 500) ? this.Item[i].arr[Thi].substr(0,500) + '...' : this.Item[i].arr[Thi];
+				var field_val = (this.Item[i].arr[Thi] != null && this.Item[i].arr[Thi].length > 300) ? this.Item[i].arr[Thi].substr(0,300) + '...' : this.Item[i].arr[Thi];
 				if(CanEdit)
 					var field_div = (table_info_tmp.COLUMN_TYPE != 'text') ? C('div', 'In', HTMLEnCode(field_val) + '&nbsp;') : C('div', {'innerHTML':HTMLEnCode(field_val)}, {'width':'380px','whiteSpace':'normal'});
 				else
@@ -674,12 +674,12 @@ var TableData = function ()
 				if(PRI_OR_UNI.length > 0 ) 
 				{
 					this.Item[i].del.Where = PRI_OR_UNI;	 // 有主键或唯一的就用这个
-					this.Item[i].del.notice = '\n\r删除一行数据. ';
+					this.Item[i].del.notice = '\n\r' + L.DelLineData;
 				}
 				else
 				{
 					this.Item[i].del.Where = Where;	 // 有主键或唯一的就用这个
-					this.Item[i].del.notice = '\n\r请求删除缺少主键或唯一值.确认操作会删除以下条件一行数据! ';	 
+					this.Item[i].del.notice = '\n\r' + L.LackKeyConfirmDel;	 
 				}
 
 				with(this)
@@ -699,7 +699,7 @@ var TableData = function ()
 						sql = sql.replace(/\n/g, '\\n');
 						sql += ' LIMIT 1 ';
 
-						SqlSubmitFormObject.ConfirmSqlSubmit(Item[this.key].del.notice + "确定操作? \n\r\n\r" + sql, sql);
+						SqlSubmitFormObject.ConfirmSqlSubmit(Item[this.key].del.notice + L.ConfrimAction + " \n\r\n\r" + sql, sql);
 					}
 					// 编辑记录操作
 					Item[i].edit.onclick = function (type)
@@ -933,7 +933,7 @@ var TableData = function ()
 				this.ActionTr.NoAllSelect,
 				C('span','In','/'),
 				this.ActionTr.OppositeSelect,
-				C('span','In',' &nbsp; &nbsp; 选择项: '),
+				C('span','In',' &nbsp; &nbsp; ' + L.SelectItems + ' : '),
 				this.ActionTr.edit,
 				this.ActionTr.del,
 				this.ActionTr.save
@@ -988,35 +988,35 @@ var TableData = function ()
 			{
 				'MenuId':'AmysqlTableDataMenu', 'AreaDomID':'TableDataBlock',
 				'MenuList':[
-					{'id':'edit', 'name':'编辑', 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
+					{'id':'edit', 'name':L.Edit, 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
 						o.Item[o.RightButtonRow].edit.onclick('edit');
 					}},
-					{'id':'EditAll', 'name':'编辑已选中记录', 'functions':function (){
+					{'id':'EditAll', 'name':L.EditSelectEdit, 'functions':function (){
 						o.ActionTr.edit.onclick('edit');
 					}},
 					{'className':'separator'},
-					{'id':'saves', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'saves', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.ActionTr.save.onclick();
 					}},
-					{'id':'SaveToNew', 'name':'保存为新记录', 'functions':function (){
+					{'id':'SaveToNew', 'name':L.SaveTonNewRow, 'functions':function (){
 						o.ActionTr.SaveToNew();
 					}},
 					{'className':'separator'},
-					{'id':'del', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'del', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.Item[o.RightButtonRow].del.onclick();
 					}},			
-					{'id':'DelAll', 'name':'删除已选中记录', 'functions':function (){
+					{'id':'DelAll', 'name':L.DelSelectRow, 'functions':function (){
 						o.ActionTr.del.onclick();
 					}},	
 					{'className': 'separator'},
-					{'id':'CancelEdit', 'name':'取消编辑', 'KeyCodeTag':'C', 'functions':function (){
+					{'id':'CancelEdit', 'name':L.CanceledEdit, 'KeyCodeTag':'C', 'functions':function (){
 						o.ActionTr.edit.onclick('CancelEdit');
 					}},
-					{'id':'CancelSelect', 'name':'取消选中记录', 'functions':function (){
+					{'id':'CancelSelect', 'name':L.CancelSelectRow, 'functions':function (){
 						o.ActionTr.NoAllSelect.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'renovate', 'name':'重新加载本页数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'renovate', 'name':L.ReloadPageData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						SqlSubmitFormObject.sql_post.value = SqlSubmitFormObject.SqlformoOriginal.value;
 						G("SqlForm").onsubmit(parseInt(G("SqlformPage").value)) 
 					}},

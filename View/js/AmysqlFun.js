@@ -347,7 +347,7 @@ var OpenWindow = function (type,id,text,action)
 }
 
 
-/************************************************
+/********************************************************************************************
  *
  * Amysql AMS
  * Amysql.com 
@@ -435,3 +435,48 @@ var UploadInit = function (id, upload_url, file_size_limit, file_types, file_upl
 	AmysqlUpObjectId = id;
 	AmysqlUpObject[AmysqlUpObjectId] = new SWFUpload(settings);	//　存至AmysqlUpObject对象
 }
+
+
+
+
+
+// 翻译相关 *****************************
+// 返回含有变量的字符串或DOM
+var printf = function (str, val, tag)
+{
+	var obj = [];
+	var All = [];
+	for (var k in val )
+	{
+		var _str = str;
+		var re = eval("/\\{\\$" + k + "\\}/ig");
+		str = str.replace(re, val[k]);
+		if(typeof(val[k]) == 'object' && _str != str)
+			obj.push(val[k]);
+	}
+		
+	if(obj.length > 0 ) 
+	{
+		var arr = str.split(obj[0]);
+		for (var k in arr )
+		{
+			All.push(C(tag, 'In', arr[k]));
+			if(obj[k]) All.push(obj[k]);
+		}
+		return All;
+	}
+	return str;
+}
+// Js模板变量输出
+function JsValue(str)
+{
+	var reg = /\{js\}([\s\S]*?)\{\/js\}/g;
+	if(reg.test(str))
+	{
+		str = str.replace(reg,function (a,b) {
+			return eval(b);
+		});
+	};
+	return str;
+}
+// End ****************************

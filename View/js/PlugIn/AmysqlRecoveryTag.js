@@ -10,11 +10,12 @@
 
 if(window.AmysqlMainObject)
 {
+
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlRecoveryTag',
-			'PlugName':'恢复窗口插件',
-			'PlugAbout':'恢复您最后关闭的标签。',
+			'PlugName':L.AmysqlRecoveryTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlRecoveryTagLanguage.PlugAbout,
 			'Sort':'Menu',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -43,7 +44,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlLNIJson':[{
 			'order':2,
 			'id':'RecoveryTag',
-			'name':'恢复关闭的窗口', 
+			'name':L.AmysqlRecoveryTagLanguage.name,
 			'PlugIn':true,
 			'action':function ()
 			{

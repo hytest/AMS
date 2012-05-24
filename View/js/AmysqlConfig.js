@@ -27,13 +27,12 @@ var _AmysqlTabMinJson = [];
 
 // 设置左栏下拉菜单数据
 var _AmysqlLNIJson = [
-	/*{'order':6.1,'id':'SetTemplet', 'name':'AmysqlTemplet.html', 'url': 'index.php/index/AmysqlTemplet'}, 
-	{'order':6.2,'id':'SetAmysql', 'name':'System.html', 'url':'index.php/index/AmysqlSystem'}, */
-	{'order':7,'id':'SetAmysqlWeb', 'name':'Amysql.com', 'url':'http://amysql.com'}, 
+	/*{'order':6.1,'id':'SetTemplet', 'name':'AmysqlTemplet.html', 'url': 'index.php/index/AmysqlTemplet'},  */
+	{'order':6.2,'id':'SetAmysql', 'name':L.SysSet, 'url':'index.php?c=index&a=AmysqlSystem'},
+	{'order':6.3,'id':'LogoutAmysql', 'name':L.Logout, 'url':'index.php?c=index&a=logout'}, 
+	{'order':7,'id':'AmysqlWeb', 'name':L.AmysqlWeb, 'url':'http://amysql.com'},
 ];
 
 // 设置左栏列表数据
 var _AmysqlLeftListJson = [];
 
-// 设置默认语言
-var _Language = 'zh';

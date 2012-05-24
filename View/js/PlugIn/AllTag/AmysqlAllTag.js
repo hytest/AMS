@@ -13,8 +13,8 @@ if(window.AmysqlMainObject)
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlAllTag',
-			'PlugName':'全部标签列表插件',
-			'PlugAbout':'排序统计显示您已打开的标签，方便您查看与关闭。',
+			'PlugName':L.AmysqlAllTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlAllTagLanguage.PlugAbout,
 			'Sort':'Menu',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -41,7 +41,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlTabMinJson':[{
 			'order':9,
 			'id':'AmysqlAllShow', 
-			'name':'所有标签列表',
+			'name':L.AmysqlAllTagLanguage.name,
 			'PlugIn':true,
 			'url':'js/PlugIn/AllTag/AmysqlAllTag.js'
 		}],
@@ -49,7 +49,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlLNIJson':[{
 			'order':3,
 			'id':'AmysqlAllShow', 
-			'name':'所有标签列表',
+			'name':L.AmysqlAllTagLanguage.name,
 			'PlugIn':true,
 			'url':'js/PlugIn/AllTag/AmysqlAllTag.js'
 		}]
@@ -61,7 +61,8 @@ if(window.AmysqlMainObject)
 
 if(window.ExtendContent)
 {
-	var AmysqlTagWindow = parent.parent.window.frames.AmysqlTag;
+	var R_W = parent.parent;
+	var AmysqlTagWindow = R_W.window.frames.AmysqlTag;
 	var AmysqlParentWindow = parent.window;
 
 	// 创建子条项
@@ -95,8 +96,8 @@ if(window.ExtendContent)
 
 
 		// 关闭
-		var U = C('u', {'className':'close','title':'关闭标签'});
-		var X = C('u', {'className':'ico2 ico_del2','innerHTML':'删除'});
+		var U = C('u', {'className':'close','title':R_W.L.AmysqlAllTagLanguage.close});
+		var X = C('u', {'className':'ico2 ico_del2'});
 		X.href = 'javascript:;';
 		U.onclick = function ()
 		{
@@ -123,7 +124,6 @@ if(window.ExtendContent)
 	var GoShow = function ()
 	{
 		this.AmysqlTagList = C('div', {'id':'AmysqlTagList'});
-		this.ItemSumB = null;
 		this.SumDiv = null;
 		this.TempTag = new Array();
 		this.ItemSum = 0;
@@ -145,21 +145,14 @@ if(window.ExtendContent)
 		}
 		
 		this.SumDiv = C('DIV');
-		this.ItemSumB = C('B');
-		this.ItemSumB.innerHTML = this.ItemSum;
-
-		SumText = document.createTextNode('总共有: ');
-		SumText2 = document.createTextNode(' 个标签。');
 		this.SumDiv.className = 'SumDiv';
-		this.SumDiv.appendChild(SumText);
-		this.SumDiv.appendChild(this.ItemSumB);
-		this.SumDiv.appendChild(SumText2);
+		this.SumDiv.innerHTML = R_W.printf(R_W.L.AmysqlAllTagLanguage.Count, {'sum':this.ItemSum});
 
 		this.AmysqlTagList.appendChild(this.SumDiv);
 		document.body.innerHTML = '';
 		C(document.body, 'In', [
 			C('link',{'type':'text/css','rel':'stylesheet','href':'js/PlugIn/AllTag/style.css'}),
-			C(C('span','In', '全部标签列表'), {'id':'h1'}),
+			C(C('span','In', R_W.L.AmysqlAllTagLanguage.name), {'id':'h1'}),
 			this.AmysqlTagList]
 		);
 	}

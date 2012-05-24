@@ -33,8 +33,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'ShowSqlHelp',
-			'ExtendName':'显示SQL语句帮助',
-			'ExtendAbout':'SQL语句帮助扩展。',
+			'ExtendName':L.SqlStatementHelp,
+			'ExtendAbout':L.SqlStatementHelpAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',

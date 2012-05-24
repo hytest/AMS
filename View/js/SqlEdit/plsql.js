@@ -65,7 +65,7 @@ CodeMirror.defineMode("plsql", function(config, parserConfig) {
       // get the whole word
       stream.eatWhile(/[\w\$_]/);
       // is it one of the listed keywords?
-      if (keywords && keywords.propertyIsEnumerable(stream.current().toLowerCase())) return ret("keyword", "keyword");
+      if (keywords && keywords.propertyIsEnumerable(stream.current().toLowerCase())) return ret("keyword", (SqlUppercase ? 'UpKeyword' : 'keyword') + (SqlBold ? ' bold' : ''));
       // is it one of the listed functions?
       if (functions && functions.propertyIsEnumerable(stream.current().toLowerCase())) return ret("keyword", "function");
       // is it one of the listed types?

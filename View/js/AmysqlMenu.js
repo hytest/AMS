@@ -24,6 +24,7 @@ function AmysqlMenu()
 		// 菜单列表各项
 		item.MenuUlDom = C('ul');
 		item.MenuUlDom.Item = [];
+		item.MenuUlDom.width = 0;
  
 		for (var k in  item.MenuList)
 		{
@@ -121,9 +122,13 @@ function AmysqlMenu()
 				var _mWidth = parseInt( o.MenuDom.offsetWidth || o.MenuDom.style.width);
 				var _mHeight = parseInt(o.MenuDom.offsetHeight);
 
+				o.MenuUlDom.width = o.MenuUlDom.scrollWidth;		// 记录宽度
+
 				o.MenuDom.style.left = ((_X + _mWidth) > _bodyWidth?(_X - _mWidth):_X) - 10 +"px";
 				o.MenuDom.style.top  = ((_Y + _mHeight) > _bodyHeight?(_Y - _mHeight):_Y) - 5 +"px";
 				if(_Y < _mHeight) o.MenuDom.style.top = _Y - 5 + 'px';
+
+				o.MenuUlDom.style.width = o.MenuUlDom.width + 'px';	// 自动宽度2012-05-17
 
 				// IframeMenu相关
 				var IframeMenuStyle = {

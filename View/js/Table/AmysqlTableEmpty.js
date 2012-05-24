@@ -19,7 +19,7 @@ ExtendArray.push({
 						'functions':function ()
 						{
 							SqlSubmitFormObject.operation_sql_text.value = 'TRUNCATE TABLE `' + SqlKeyword(TableName) + '`';
-							SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 清空 </b></font>数据表: ' + TableName + ' ?' , 0);
+							SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmEmptyTable, {'list':TableName, 'empty':'<font color="red"><b>' + L.Empty + '</b></font>'}) , 0);
 							SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 						}
 					});
@@ -31,8 +31,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableEmpty',
-			'ExtendName':'清空数据表',
-			'ExtendAbout':'清空数据表扩展。',
+			'ExtendName':L.EmptyTable,
+			'ExtendAbout':L.EmptyTableAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',

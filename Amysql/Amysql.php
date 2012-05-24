@@ -237,8 +237,41 @@ class AmysqlController {
 		$file = _View . $file . '.php';
 		if(is_file($file)) 
 			Return file_get_contents($file);
+		Amysql::AmysqlNotice($file . ' 读取数据文件不存在');
+	}
 
-		Amysql::AmysqlNotice($file . ' 数据文件不存在');
+	/**
+	 * 写入相关文件数据(模板目录) 2012-5-12
+	 * @param	string $file	文件名
+	 * @param	string $data	数据
+	 */
+	public function _plus($file, $data) 
+	{
+		$file = str_replace(_PathTag, DIRECTORY_SEPARATOR, $file);
+		$file = _View . $file . '.php';
+		$FileArr = explode(DIRECTORY_SEPARATOR, $file);
+
+		$root = $FileArr[0];
+		foreach ($FileArr as $key=>$val)
+		{
+			if($key > count($FileArr)-3) break;
+			$root .= DIRECTORY_SEPARATOR . $FileArr[$key+1];
+			if(!file_exists($root)) mkdir($root);
+		}
+		file_put_contents($file, $data);
+	}
+
+	/**
+	 * 删除相关文件数据(模板目录) 2012-5-12
+	 * @param	string $file	文件名
+	 */
+	public function _del($file) 
+	{
+		$file = str_replace(_PathTag, DIRECTORY_SEPARATOR, $file);
+		$file = _View . $file . '.php';
+		if(is_file($file)) 
+			Return unlink($file);
+		Amysql::AmysqlNotice($file . ' 删除数据文件不存在');
 	}
 
 	/**

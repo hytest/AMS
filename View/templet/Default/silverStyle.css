@@ -79,7 +79,7 @@ a.h1:hover{
     *zoom:1;
 }
 
-/* 左栏 ************************/
+/* 左栏 ************************************************************************************************************************/
 
 #left {
 	background: url("leftbj.gif") repeat top right;
@@ -152,8 +152,11 @@ a.h1:hover{
 .SetAmysql i{
 	background:url(ico.gif) no-repeat -1910px -8px;
 }
-.SetAmysqlWeb i{
+.AmysqlWeb i{
 	background:url(ico.gif) no-repeat -373px -8px;
+}
+.LogoutAmysql i{
+	background:url(ico.gif) no-repeat -349px -8px;
 }
 .PlugAmysql i{
 	background:url(ico.gif) no-repeat -2898px -8px;
@@ -240,7 +243,7 @@ tr,td {
 /* LEFT END ************************/
 
 
-/* 标签 TAG ************************/
+/* 标签 TAG ************************************************************************************************************************/
 #navigation_body {
 	background:#fff;
 	margin:0px;
@@ -311,7 +314,7 @@ tr,td {
 
 
 
-/* 其它 ************************/
+/* 内容相关 ************************************************************************************************************************/
 #contant {
 	margin:0px;
 	margin-left:2px;
@@ -708,7 +711,7 @@ tr,td {
 }
 
 #ContentExtendManage .SumDiv {
-	margin:20px;
+	margin:20px 50px 0px 10px;
 }
 
 /* 数据表样式 */
@@ -945,6 +948,7 @@ tr,td {
 	height:auto;
 	padding:5px;
 	overflow:hidden;
+	resize: vertical;
 }
 .warning_sql_text {
 	border:1px solid #FF0000;
@@ -1054,7 +1058,9 @@ span.CodeMirror-selected {
 }
 .CodeMirror-matchingbracket {color: #FFFFFF !important;background:#33CC00}
 .CodeMirror-nonmatchingbracket {color: #f22 !important;}
-.cm-s-default span.cm-keyword {color: #909;font-weight:bold;text-transform:uppercase;}
+.cm-s-default span.cm-keyword {color: #909;}
+.cm-s-default span.cm-UpKeyword {color: #909;text-transform:uppercase;}
+.cm-s-default span.bold {font-weight:bold;}
 .cm-s-default span.cm-atom {color: #219;}
 .cm-s-default span.cm-number {color: blue;}
 .cm-s-default span.cm-def {color: #00f;}
@@ -1094,10 +1100,11 @@ span.CodeMirror-selected {
     border-radius: 3px;
     box-shadow: 0 0 7px black;
     padding: 2px;
-    width: 180px;
+    _width: 200px;
+	min-width:180px;
 }
-.AmysqlMenu ul, .AmysqlMenu li{list-style:none;margin:0px;padding:0px;}
-.AmysqlMenu .item, .AmysqlMenu .item2{color:#000000;list-style:none;margin:0px;padding:0px;height:15px;display:block;padding:5px 0px;font-size:13px;}
+.AmysqlMenu ul, .AmysqlMenu li{list-style:none;margin:0px;padding:0px;word-break: break-all;	/* 强制换行 */}
+.AmysqlMenu .item, .AmysqlMenu .item2{color:#000000;list-style:none;margin:0px;padding:0px;height:15px;display:block;padding:5px 15px 5px 0px;font-size:13px;}
 .AmysqlMenu .item2{color:#CFCFC7}
 .AmysqlMenu a {cursor:default;}
 .AmysqlMenu .YitemOver, .AmysqlMenu .NitemOver{background-color:#2f6bc3;color:#fff;cursor:default;}
@@ -1118,4 +1125,44 @@ span.CodeMirror-selected {
 	font-size:14px;
 	font-weight:bold;
 	color:blue;
+}
+
+
+/* 系统设置页 */
+#AmysqlSystemContent {
+	padding:0px 10px;
+	margin-bottom:60px;
+	width:650px;
+	color:#484848;
+}
+#AmysqlSystemContent p {
+	margin:3px 0px;
+}
+#AmysqlSystemContent #submit {
+	font-size:14px;
+}
+#AmysqlSystemContent .block {
+	padding:8px 25px 10px 25px;
+	margin:20px 0px;
+	display:block;
+	cursor:default;
+	text-shadow: #fff 1px 1px 0;
+	position: relative;
+	border:1px solid #E3E3E3;
+	border-radius: 5px;
+	background:url("Listbj01.gif") repeat-x left top white;
+}
+#AmysqlSystemContent .block h1{
+	font-size:14px;
+	color:#6D6D6D;
+	margin:0px 0px 8px -15px;
+}
+#AmysqlSystemContent #time {
+	text-align:right;
+	color:#959595;
+}
+#AmysqlSystemContent i {
+	color:#959595;
+	font-size:11px;
+	margin:0px;
 }

@@ -34,8 +34,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableStructure',
-			'ExtendName':'表结构',
-			'ExtendAbout':'表结构维护、索引管理扩展。',
+			'ExtendName':L.TableStructure,
+			'ExtendAbout':L.TableStructureAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -112,7 +112,7 @@ var Table = function ()
 		this.width_arr = new Array();			// 记录宽度
 		this.AddLint_field = new Array();		// 添加新字段　字段集合
 
-		var th = new Array(C('th'),C('th',{'innerHTML':'No.'},{'padding':'5px'}), C('th','In','字段'), C('th','In','类型'),C('th','In','整理'),C('th','In','允许NULL'),C(C('th','In','默认值')),C('th','In','AUTO_INCREMENT'),C('th','In','属性'),C('th','In','注释'),C('th','In','操作 && 索引') );
+		var th = new Array(C('th'),C('th',{'innerHTML':'No.'},{'padding':'5px'}), C('th','In',L.Field), C('th','In',L.Type),C('th','In',L.Collations),C('th','In',L.AllowNull),C(C('th','In',L.DefaultVal)),C('th','In','AUTO_INCREMENT'),C('th','In',L.Attribute),C('th','In',L.Comment),C('th','In', L.Operations + ' && ' + L.Index) );
 		if(!CanEditStructure) th.splice(th.length-1, 1);
 		var htr = C('tr', 'In', th);
 		this.table_thead.appendChild(htr);
@@ -127,11 +127,11 @@ var Table = function ()
 			this.Item[i].input.checked = false;
 			btr_input.appendChild(this.Item[i].input);
 
-			this.Item[i].edit = C('a',{'innerHTML':'修改','className':'ico2 ico_edit2','title':'修改'});
-			this.Item[i].del = C('a',{'innerHTML':'删除','className':'ico2 ico_del2','title':'删除'});
-			this.Item[i].PrimeKey = C('a',{'innerHTML':'主键','className':'ico2 ico_PrimeKey2','title':'主键'});
-			this.Item[i].only = C('a',{'innerHTML':'唯一','className':'ico2 ico_only2','title':'唯一'});
-			this.Item[i].index = C('a',{'innerHTML':'索引','className':'ico2 ico_index2','title':'索引'});
+			this.Item[i].edit = C('a',{'innerHTML':L.Edit,'className':'ico2 ico_edit2','title':L.Edit});
+			this.Item[i].del = C('a',{'innerHTML':L.Del,'className':'ico2 ico_del2','title':L.Del});
+			this.Item[i].PrimeKey = C('a',{'innerHTML':L.PrimeKey,'className':'ico2 ico_PrimeKey2','title':L.PrimeKey});
+			this.Item[i].only = C('a',{'innerHTML':L.Only,'className':'ico2 ico_only2','title':L.Only});
+			this.Item[i].index = C('a',{'innerHTML':L.Index,'className':'ico2 ico_index2','title':L.Index});
 			this.Item[i].key = i;
 
 			this.Item[i].edit.data = new Array();	// 编辑保存的数据
@@ -280,22 +280,22 @@ var Table = function ()
 					obj.del.onclick = function ()
 					{
 						var sql = 'ALTER TABLE `' + TableName + '` DROP `' + Item[obj.key].Field.replace(/`/g, '``') + '`';
-						SqlSubmitFormObject.ConfirmSqlSubmit("删除`" + Item[obj.key].Field + "`字段。确定操作吗? \n\r\n\r" + sql, sql);
+						SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.ConfirmDelField, {'field':Item[obj.key].Field}) + " \n\r\n\r" + sql, sql);
 					}
 					obj.PrimeKey.onclick = function ()
 					{
 						var sql = 'ALTER TABLE `' + TableName + '` ADD PRIMARY KEY(`' + Item[obj.key].Field.replace(/`/g, '``') + '`)';
-						SqlSubmitFormObject.ConfirmSqlSubmit("设为主键`" + Item[obj.key].Field + "`。确定操作吗? \n\r\n\r" + sql, sql);
+						SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.FieldSetPrimeKey, {'field':Item[obj.key].Field}) + " \n\r\n\r" + sql, sql);
 					}
 					obj.only.onclick = function ()
 					{
 						var sql = 'ALTER TABLE `' + TableName + '` ADD UNIQUE (`' + Item[obj.key].Field.replace(/`/g, '``') + '`)';
-						SqlSubmitFormObject.ConfirmSqlSubmit("设为唯一`" + Item[obj.key].Field + "`。确定操作吗? \n\r\n\r" + sql, sql);
+						SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.FieldSetOnly, {'field':Item[obj.key].Field}) + " \n\r\n\r" + sql, sql);
 					}
 					obj.index.onclick = function ()
 					{
 						var sql = 'ALTER TABLE `' + TableName + '` ADD INDEX  (`' + Item[obj.key].Field.replace(/`/g, '``') + '`)';
-						SqlSubmitFormObject.ConfirmSqlSubmit("设为索引`" + Item[obj.key].Field + "`。确定操作吗? \n\r\n\r" + sql, sql);
+						SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.FieldSetIndex, {'field':Item[obj.key].Field}) + " \n\r\n\r" + sql, sql);
 					}
 				}
 				)(Item[i])
@@ -411,7 +411,7 @@ var Table = function ()
 		// 操作的Tr ****************************************
 		with(this)
 		{
-			ActionTr.AllSelect = C('a','In','全选');
+			ActionTr.AllSelect = C('a','In',L.SelectAll);
 			ActionTr.AllSelect.onclick = function ()
 			{
 				for (var i = 0; i < ItemSum; ++i)
@@ -420,7 +420,7 @@ var Table = function ()
 				}
 			}
 
-			ActionTr.NoAllSelect = C('a','In','全不选');
+			ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 			ActionTr.NoAllSelect.onclick = function ()
 			{
 				for (var i = 0; i < ItemSum; ++i)
@@ -429,7 +429,7 @@ var Table = function ()
 				}
 			}
 
-			ActionTr.OppositeSelect = C('a','In','反选');
+			ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 			ActionTr.OppositeSelect.onclick = function ()
 			{
 				for (var i = 0; i < ItemSum; ++i)
@@ -513,7 +513,7 @@ var Table = function ()
 
 				if(alter_table_add.length == 0 && alter_table == 0)
 				{
-					alert('结构数据没改变不需保存。');
+					alert(L.NoChangeStructure);
 					return;	// 没有编辑返回
 				}
 				var sql = 'ALTER TABLE `' +  TableName + '`' + "\n" + alter_table.join(',' + "\n");
@@ -532,27 +532,27 @@ var Table = function ()
 
 
 		
-		this.ActionTr.ListSelect = C('a',{'innerHTML':'选择','className':'ico ico_select'});
-		this.ActionTr.edit = C('a',{'innerHTML':'修改','className':'ico ico_edit', 'title':'修改选择项'});
-		this.ActionTr.del = C('a',{'innerHTML':'删除','className':'ico ico_del', 'title':'删除选择项'});
-		this.ActionTr.PrimeKey = C('a',{'innerHTML':'主键','className':'ico ico_PrimeKey', 'title':'选择项设为主键'});
-		this.ActionTr.only = C('a',{'innerHTML':'唯一','className':'ico ico_only', 'title':'选择项设为唯一'});
-		this.ActionTr.index = C('a',{'innerHTML':'索引','className':'ico ico_index', 'title':'选择项设为索引'});
-		this.ActionTr.save = C('a',{'innerHTML':'保存','className':'ico ico_save', 'title':'保存编辑项'});
+		this.ActionTr.ListSelect = C('a',{'innerHTML':L.Selects,'className':'ico ico_select'});
+		this.ActionTr.edit = C('a',{'innerHTML':L.Edit,'className':'ico ico_edit', 'title':L.EditSelectItem});
+		this.ActionTr.del = C('a',{'innerHTML':L.Del,'className':'ico ico_del', 'title':L.DeleteSelectedItem});
+		this.ActionTr.PrimeKey = C('a',{'innerHTML':L.PrimeKey,'className':'ico ico_PrimeKey', 'title':L.SelectedSetPrimeKey});
+		this.ActionTr.only = C('a',{'innerHTML':L.Only,'className':'ico ico_only', 'title':L.SelectedSetOnly});
+		this.ActionTr.index = C('a',{'innerHTML':L.Index,'className':'ico ico_index', 'title':L.SelectedSetIndex});
+		this.ActionTr.save = C('a',{'innerHTML':L.Save,'className':'ico ico_save', 'title':L.SaveEditItem});
 
 
 		// 增加新字段
 		this.ActionTr.AddLint = C('form' , {'method':'POST','target':'GetTableData'});
 		this.ActionTr.AddLint.id = 'TableAddLint';
 		this.ActionTr.AddLint.AddNumInp = C('input',{'value':1}, {'width':'25px'});
-		this.ActionTr.AddLint.AddSubmit = C('input', {'type':'button','value':'确定','className':'submit'});
-		this.ActionTr.AddLint.AddSelect = CreatesSelect(new Array('在表结尾|END', '在表开头|FIRST', new Array('在字段之后 >> ', this.AddLint_field)));
+		this.ActionTr.AddLint.AddSubmit = C('input', {'type':'button','value':L.Determine,'className':'submit'});
+		this.ActionTr.AddLint.AddSelect = CreatesSelect(new Array(L.TableEnd + '|END', L.TableHead + '|FIRST', new Array(L.Fieldlater + ' >> ', this.AddLint_field)));
 		C(this.ActionTr.AddLint, 'In', new Array(
 			C('a', {'className':'ico ico_AddLint'}), 
 			this.ActionTr.AddLint.AddSelect,
-			C('font', 'In', ' 添加 '), 
+			C('font', 'In', ' ' + L.Add + ' '), 
 			this.ActionTr.AddLint.AddNumInp, 
-			C('font', 'In', ' 新字段'),
+			C('font', 'In', ' ' + L.NewField),
 			this.ActionTr.AddLint.AddSubmit
 			)
 		);
@@ -565,15 +565,15 @@ var Table = function ()
 
 		// 显示索引
 		this.ActionTr.ShowIndex = C('font');
-		this.ActionTr.ShowIndex.button = C('input', {'type':'button','value':this.IndexItem.length > 0 ? '关闭':'显示'});
-		this.ActionTr.ShowIndex.button.status_x = this.IndexItem.length > 0 ? 'close':'open';
+		this.ActionTr.ShowIndex.button = C('input', {'type':'button','value':(this.IndexItem.length > 0 && TableShowIndex) ? L.Close:L.Show});
+		this.ActionTr.ShowIndex.button.status_x = (this.IndexItem.length > 0 && TableShowIndex) ? 'close':'open';
 		this.ActionTr.ShowIndex.button.onclick = function ()
 		{
 			TableObject.ShowIndex(this.status_x);
-			this.value =  this.status_x == 'open' ? '关闭' : '显示';
+			this.value =  this.status_x == 'open' ? L.Close : L.Show;
 			this.status_x = this.status_x == 'open' ? 'close' : 'open';
 		}
-		this.ActionTr.ShowIndex = C(this.ActionTr.ShowIndex, 'In', [C('font', 'In', ' &nbsp; 索引列表:'), this.ActionTr.ShowIndex.button, C('i', 'In', this.IndexItem.length + '记录')]);
+		this.ActionTr.ShowIndex = C(this.ActionTr.ShowIndex, 'In', [C('font', 'In', ' &nbsp; ' + L.IndexList + ':'), this.ActionTr.ShowIndex.button, C('i', 'In', '<b>' + this.IndexItem.length + '</b> ' + L.Record)]);
 
 
 		with(this)
@@ -615,7 +615,7 @@ var Table = function ()
 					var sql = 'ALTER TABLE `' + TableName + '`' +  temp_arr.join(',');
 					SqlSubmitFormObject.ActionOperation.value = 1;
 					SqlSubmitFormObject.operation_sql_text.value = sql;
-					SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 删除 </b></font>字段: ' + temp_arr2.join('; ') + ' ?' , 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmDelField, {'list':temp_arr2.join('; '), 'b':'<font color="red"><b>', '_b':'</b></font>'}), 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 				obj.PrimeKey.onclick = function ()
@@ -629,7 +629,7 @@ var Table = function ()
 					var sql = 'ALTER TABLE `' + TableName + '` ADD PRIMARY KEY  (`' + temp_arr.join('`,`') + '`)';
 					SqlSubmitFormObject.ActionOperation.value = 1;
 					SqlSubmitFormObject.operation_sql_text.value = sql;
-					SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 设为主键 </b></font>字段: ' + temp_arr.join('; ') + ' ?' , 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmSetFieldPrimeKey, {'list':temp_arr2.join('; '), 'b':'<font color="red"><b>', '_b':'</b></font>'}) , 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 				obj.only.onclick = function ()
@@ -643,7 +643,7 @@ var Table = function ()
 					var sql = 'ALTER TABLE `' + TableName + '` ADD UNIQUE  (`' + temp_arr.join('`,`') + '`)';
 					SqlSubmitFormObject.ActionOperation.value = 1;
 					SqlSubmitFormObject.operation_sql_text.value = sql;
-					SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 设为唯一 </b></font>字段: ' + temp_arr.join('; ') + ' ?', 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmSetFieldOnly, {'list':temp_arr2.join('; '), 'b':'<font color="red"><b>', '_b':'</b></font>'}), 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 				obj.index.onclick = function ()
@@ -657,7 +657,7 @@ var Table = function ()
 					var sql = 'ALTER TABLE `' + TableName + '` ADD INDEX  (`' + temp_arr.join('`,`') + '`)';
 					SqlSubmitFormObject.ActionOperation.value = 1;
 					SqlSubmitFormObject.operation_sql_text.value = sql;
-					SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 设为索引 </b></font>字段: ' + temp_arr.join('; ') + ' ?', 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmSetFieldIndex, {'list':temp_arr2.join('; '), 'b':'<font color="red"><b>', '_b':'</b></font>'}), 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 				
@@ -687,7 +687,7 @@ var Table = function ()
 						o.edit[6] = C(CreatesSelect(TextOperators), '', {'width':'170px'});
 						o.edit[7] = C('textarea', {'className':'edit_input'}, {'height':'17px','width':'100px'});
 						o.edit[8] = C(CreatesSelect(ColumnIndex), '',{'width':'100px'});
-						o.del = C('a', {'innerHTML':'删除', 'className':'ico2 ico_del2', 'title':'删除'});
+						o.del = C('a', {'innerHTML':L.Del, 'className':'ico2 ico_del2', 'title':L.Del});
 						
 						
 						o.btr = C('tr', 'In', new Array(
@@ -796,7 +796,7 @@ var Table = function ()
 				this.ActionTr.NoAllSelect,
 				C('span','In','/'),
 				this.ActionTr.OppositeSelect,
-				C('span','In',' &nbsp; &nbsp; 选择项: '),
+				C('span','In',' &nbsp; &nbsp; ' + L.SelectItems + ': '),
 				this.ActionTr.edit,
 				this.ActionTr.del,
 				this.ActionTr.PrimeKey,
@@ -819,7 +819,7 @@ var Table = function ()
 		this.table.appendChild(this.table_tfoot);
 		this.list.appendChild(this.table);
 
-		if(this.IndexItem.length > 0) this.ShowIndex();	// 显示索引
+		if(this.IndexItem.length > 0 && TableShowIndex) this.ShowIndex();	// 显示索引
 
 		this.Menu();									// 加载右键菜单
 	}
@@ -860,7 +860,7 @@ var Table = function ()
 			}
 		}
 
-		var th_title = ["操作","索引键名","索引类型","唯一","字段","大小","序列","整理","基数","Packed","Null","注释"];
+		var th_title = [L.Operations,L.IndexKeyName,L.IndexType,L.Only,L.Field,L.Size,L.Sequence,L.Collations,L.Radix,"Packed","Null",L.Comment];
 		this.IndexData.table_thead.tr = C('tr');
 		for (key in th_title)
 			C(this.IndexData.table_thead.tr, 'In', (key == 4 && exist_MuchRow) ? C('th', {'innerHTML': th_title[key], 'colSpan':2}) : C('th', 'In', th_title[key]));
@@ -876,8 +876,8 @@ var Table = function ()
 
 				this.IndexItem[key].Action = (NL > 1) ? C('td',{'rowSpan': NL}) : C('td');
 				this.IndexItem[key].Action.input = C('input', {'type':'checkbox'});
-				this.IndexItem[key].Action.del = C('a', {'innerHTML':'删除','className':'ico2 ico_del2','title':'删除'});
-				this.IndexItem[key].Action.edit = C('a',{'innerHTML':'修改','className':'ico2 ico_edit2','title':'修改'});
+				this.IndexItem[key].Action.del = C('a', {'innerHTML':L.Del,'className':'ico2 ico_del2','title':L.Del});
+				this.IndexItem[key].Action.edit = C('a',{'innerHTML':L.Edit,'className':'ico2 ico_edit2','title':L.Edit});
 				C(this.IndexItem[key].Action, 'In', [this.IndexItem[key].Action.input, this.IndexItem[key].Action.edit, this.IndexItem[key].Action.del]);
 				
 				with(this)
@@ -895,7 +895,7 @@ var Table = function ()
 							else
 								var sql = 'ALTER TABLE  `' +  TableName + '` DROP INDEX  `' + obj.Key_name + '`';
 							
-							SqlSubmitFormObject.ConfirmSqlSubmit("确定删除索引:" + obj.Key_name + "? \n\r\n\r" + sql, sql);
+							SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.ConfirmDelIndex, {'list': obj.Key_name, 'b':'', '_b':''}) + "? \n\r\n\r" + sql, sql);
 						}
 						obj.Action.edit.onclick = function (type)
 						{	
@@ -985,8 +985,8 @@ var Table = function ()
 						if(!obj.NL || NL > 1)
 						{
 							obj.Action_small = C('td');
-							obj.Action_small.del_small = C('a',{'In':'删除','className':'ico2 ico_del2','title':'删除'});
-							obj.Action_small.edit_small = C('a',{'In':'修改','className':'ico2 ico_edit2','title':'修改'});
+							obj.Action_small.del_small = C('a',{'In':L.Del,'className':'ico2 ico_del2','title':L.Del});
+							obj.Action_small.edit_small = C('a',{'In':L.Edit,'className':'ico2 ico_edit2','title':L.Edit});
 							C(obj.Action_small, 'In', [obj.Action_small.edit_small, obj.Action_small.del_small]);
 
 							obj.Action_small.del_small.onclick = function ()
@@ -1072,7 +1072,7 @@ var Table = function ()
 					this.IndexItem[key].Action,
 					C((NL > 1) ? C('td', {'rowSpan':NL}) : C('td'), 'In', C(C('div', {'className':'field_div'}), 'In', C('b', 'In', this.IndexItem[key].Key_name))) ,
 					C((NL > 1) ? C('td', {'rowSpan':NL}) : C('td'), 'In', C(C('div', {'className':'field_div'}), 'In', this.IndexItem[key].Index_type + '&nbsp; | <i>' + this.IndexItem[key].type + '</i>')) ,
-					C((NL > 1) ? C('td', {'rowSpan':NL}) : C('td'), 'In', (this.IndexItem[key].Non_unique == '0' ? '是' : '否')) ,
+					C((NL > 1) ? C('td', {'rowSpan':NL}) : C('td'), 'In', (this.IndexItem[key].Non_unique == '0' ? L.Yes : L.No)) ,
 					(exist_MuchRow) ? ( (NL > 1 || NL == 0 ) ? this.IndexItem[key].Action_small : C('td') ) : false,
 					C('td', 'In', C('div', {'className': 'field_div', 'innerHTML':this.IndexItem[key].Column_name})) ,
 					C('td', 'In', C('div', {'className': 'field_div', 'innerHTML' : (is_null(this.IndexItem[key].Sub_part) ? '<i>NULL</i>' : this.IndexItem[key].Sub_part)})),
@@ -1189,28 +1189,28 @@ var Table = function ()
 			// 操作的tr
 			with(this)
 			{
-				IndexData.table_tfoot.ActionTr.AllSelect = C('a','In','全选');
+				IndexData.table_tfoot.ActionTr.AllSelect = C('a','In', L.SelectAll);
 				IndexData.table_tfoot.ActionTr.AllSelect.onclick = function ()
 				{
 					for (var i = 0; i < IndexItem.length; ++i)
 						ClickTr(IndexItem[i].btr, false, false , 'IndexShow');	// 只能选上	
 				}
 
-				IndexData.table_tfoot.ActionTr.NoAllSelect = C('a','In','全不选');
+				IndexData.table_tfoot.ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 				IndexData.table_tfoot.ActionTr.NoAllSelect.onclick = function ()
 				{
 					for (var i = 0; i < IndexItem.length; ++i)
 						ClickTr(IndexItem[i].btr, false, true , 'IndexShow');	// 不选上	
 				}
 
-				IndexData.table_tfoot.ActionTr.OppositeSelect = C('a','In','反选');
+				IndexData.table_tfoot.ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 				IndexData.table_tfoot.ActionTr.OppositeSelect.onclick = function ()
 				{
 					for (var i = 0; i < IndexItem.length; ++i)
 						ClickTr(IndexItem[i].btr, true, false , 'IndexShow');	// 反选	
 				}
 
-				IndexData.table_tfoot.ActionTr.edit = C('a',{'innerHTML':'修改','className':'ico ico_edit','title':'修改选择项'});
+				IndexData.table_tfoot.ActionTr.edit = C('a',{'innerHTML':L.Edit,'className':'ico ico_edit','title':L.EditSelectItem});
 				IndexData.table_tfoot.ActionTr.edit.onclick = function (type)
 				{
 					type = typeof(type) == 'string' ? type : 'edit';
@@ -1236,7 +1236,7 @@ var Table = function ()
 						}
 					}
 				}
-				IndexData.table_tfoot.ActionTr.del = C('a',{'innerHTML':'删除','className':'ico ico_del','title':'删除选择项'});
+				IndexData.table_tfoot.ActionTr.del = C('a',{'innerHTML':L.Del,'className':'ico ico_del','title':L.DeleteSelectedItem});
 				IndexData.table_tfoot.ActionTr.del.onclick = function ()
 				{
 					var DelIndexSql = [];
@@ -1256,12 +1256,12 @@ var Table = function ()
 					{
 						SqlSubmitFormObject.ActionOperation.value = 1;
 						SqlSubmitFormObject.operation_sql_text.value =  'ALTER TABLE `' + TableName + '` ' + DelIndexSql.join(', ');
-						SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 删除 </b></font>索引: ' + DelIndexName.join('; ') + ' ?' , 0);
+						SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmDelIndex, {'list': DelIndexName.join('; '), 'b':'<font color="red"><b>', '_b':'</b></font>'}), 0);
 						SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 					}
 					
 				}
-				IndexData.table_tfoot.ActionTr.save = C('a',{'innerHTML':'保存','className':'ico ico_save', 'title':'保存编辑项'});
+				IndexData.table_tfoot.ActionTr.save = C('a',{'innerHTML':L.Save,'className':'ico ico_save', 'title':L.SaveEditItem});
 				IndexData.table_tfoot.ActionTr.save.onclick = function ()
 				{
 					var SaveSql = [];
@@ -1363,7 +1363,7 @@ var Table = function ()
 
 					if(FinalSql.length == 0)
 					{
-						alert('索引数据无改变不需保存。');
+						alert(L.NoChangeIndex);
 						return;
 					}
 					var sql = 'ALTER TABLE `' + TableName + '`' + FinalSql.join(',');
@@ -1373,13 +1373,13 @@ var Table = function ()
 			}
 
 			C(this.IndexData.table_tfoot.ActionTr.td, 'In', 
-				[C('a', {'innerHTML':'选择','className': 'ico ico_select'}),
+				[C('a', {'innerHTML':L.Selects,'className': 'ico ico_select'}),
 				this.IndexData.table_tfoot.ActionTr.AllSelect, 
 				C('span','In','/'),
 				this.IndexData.table_tfoot.ActionTr.NoAllSelect, 
 				C('span','In','/'),
 				this.IndexData.table_tfoot.ActionTr.OppositeSelect,
-				C('span','In',' &nbsp; &nbsp; 选择项: '),
+				C('span','In',' &nbsp; &nbsp; ' + L.SelectItems + ': '),
 				this.IndexData.table_tfoot.ActionTr.edit,
 				this.IndexData.table_tfoot.ActionTr.del,
 				this.IndexData.table_tfoot.ActionTr.save]
@@ -1390,7 +1390,7 @@ var Table = function ()
 			this.IndexData.notice = C('div');
 			this.IndexData.notice.className = 'notice';
 			C(this.IndexData.notice, 'In', C('b', {'className':'ico ico_sqlError'}));
-			C(this.IndexData.notice, 'In', C('font', 'In', '表没有索引!'));
+			C(this.IndexData.notice, 'In', C('font', 'In', L.NoIndex));
 			this.IndexData.table_tbody.appendChild( C(C('tr', {'className':'odd'}), 'In', C(C('td', {'colSpan': '12'}), 'In', this.IndexData.notice)) );
 				
 		}
@@ -1468,41 +1468,41 @@ var Table = function ()
 			{
 				'MenuId':'AmysqlTableMenu', 'AreaDomID':'TableBlockStructure',
 				'MenuList':[
-					{'id':'Sedit', 'name':'编辑', 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
+					{'id':'Sedit', 'name':L.Edit, 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
 						o.Item[o.RightButtonRow].edit.onclick('edit');
 					}},
-					{'id':'SEditAll', 'name':'编辑已选中项', 'functions':function (){
+					{'id':'SEditAll', 'name':L.EditSelects, 'functions':function (){
 						o.ActionTr.edit.onclick('edit');
 					}},
 					{'className':'separator'},
-					{'id':'Ssaves', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'Ssaves', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.ActionTr.SaveEdit();
 					}},
 					{'className':'separator'},
-					{'id':'Sdel', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'Sdel', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.Item[o.RightButtonRow].del.onclick();
 					}},	
-					{'id':'SDelAll', 'name':'删除已选中项', 'functions':function (){
+					{'id':'SDelAll', 'name':L.DeleteSelectedItems, 'functions':function (){
 						o.ActionTr.del.onclick();
 					}},	
-					{'id':'SPrimeKey', 'name':'设为主键', 'ico':'ico_PrimeKey2', 'functions':function (){
+					{'id':'SPrimeKey', 'name':L.SetPrimeKey, 'ico':'ico_PrimeKey2', 'functions':function (){
 						o.Item[o.RightButtonRow].PrimeKey.onclick();
 					}},	
-					{'id':'Sonly', 'name':'设为唯一', 'ico':'ico_only2', 'functions':function (){
+					{'id':'Sonly', 'name':L.SetOnly, 'ico':'ico_only2', 'functions':function (){
 						o.Item[o.RightButtonRow].only.onclick();
 					}},	
-					{'id':'Sindex', 'name':'设为索引', 'ico':'ico_index2', 'functions':function (){
+					{'id':'Sindex', 'name':L.SetIndex, 'ico':'ico_index2', 'functions':function (){
 						o.Item[o.RightButtonRow].index.onclick();
 					}},	
 					{'className': 'separator'},
-					{'id':'SCancelEdit', 'name':'取消编辑', 'KeyCodeTag':'C', 'functions':function (){
+					{'id':'SCancelEdit', 'name':L.CanceledEdit, 'KeyCodeTag':'C', 'functions':function (){
 						o.ActionTr.edit.onclick('CancelEdit');
 					}},
-					{'id':'SCancelSelect', 'name':'取消选中项', 'functions':function (){
+					{'id':'SCancelSelect', 'name':L.UncheckItem, 'functions':function (){
 						o.ActionTr.NoAllSelect.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'Srenovate', 'name':'重新加载结构数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'Srenovate', 'name':L.ReloadStructureData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						o.ActionTr.Srenovate();
 					}},
 				],
@@ -1556,33 +1556,33 @@ var Table = function ()
 			{
 				'MenuId':'AmysqlTableIndexMenu', 'AreaDomID':'ShowIndex',
 				'MenuList':[
-					{'id':'SIedit', 'name':'编辑', 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
+					{'id':'SIedit', 'name':L.Edit, 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
 						o.IndexItem[o.IndexRightButtonRow].Action.edit.onclick('edit');
 					}},
-					{'id':'SIEditAll', 'name':'编辑已选中项', 'functions':function (){
+					{'id':'SIEditAll', 'name':L.EditSelects, 'functions':function (){
 						o.IndexData.table_tfoot.ActionTr.edit.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'SIsaves', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'SIsaves', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.IndexData.table_tfoot.ActionTr.save.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'SIdel', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'SIdel', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.IndexItem[o.IndexRightButtonRow].Action.del.onclick();
 					}},	
-					{'id':'SIDelAll', 'name':'删除已选中项', 'functions':function (){
+					{'id':'SIDelAll', 'name':L.DeleteSelectedItems, 'functions':function (){
 						o.IndexData.table_tfoot.ActionTr.del.onclick();
 					}},	
 					{'className': 'separator'},
-					{'id':'SICancelEdit', 'name':'取消编辑', 'KeyCodeTag':'C', 'functions':function (){
+					{'id':'SICancelEdit', 'name':L.CanceledEdit, 'KeyCodeTag':'C', 'functions':function (){
 						o.IndexData.table_tfoot.ActionTr.edit.onclick('CancelEdit');
 					}},
-					{'id':'SICancelSelect', 'name':'取消选中项', 'functions':function (){
+					{'id':'SICancelSelect', 'name':L.UncheckItem, 'functions':function (){
 						if(o.IndexData.table_tfoot.ActionTr.NoAllSelect)
 							o.IndexData.table_tfoot.ActionTr.NoAllSelect.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'SIrenovate', 'name':'重新加载索引数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'SIrenovate', 'name':L.ReloadIndexData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						o.ActionTr.Srenovate();
 					}},
 				],

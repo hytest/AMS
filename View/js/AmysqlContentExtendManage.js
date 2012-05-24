@@ -31,8 +31,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'ExtendManageObject',
-			'ExtendName':'扩展管理',
-			'ExtendAbout':'管理查看已安装的扩展，关闭或开启。',
+			'ExtendName':L.ExtensionManager,
+			'ExtendAbout':L.ExtensionManagerAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -96,7 +96,7 @@ var ContentExtendManage = function ()
 					}
 				})(Item);
 				this.SumDiv = C('DIV', {'className':'SumDiv'});
-				C(this.SumDiv, 'In', '<div>总共有: <b>' + ExtendArray.length + '</b>个扩展。<b>Notice: </b>设置后新页面才生效。<br/><div style="color:#787878;margin-top:5px">如需彻底禁止掉扩展，您可直接删除扩展JS文件、或去掉对应的JS扩展引用。</div></div>');
+				C(this.SumDiv, 'In', '<div>' + printf(L.ExtensionManagerCount, {'sum':'<b>'+ExtendArray.length+'</b>', 'Notice':' <b>Notice:</b>'}) + '<br/><div style="color:#787878;margin-top:5px">' + L.ExtensionManagerNotice + '</div></div>');
 
 				div.onmouseover = function ()
 				{

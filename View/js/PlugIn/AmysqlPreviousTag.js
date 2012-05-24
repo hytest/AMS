@@ -9,13 +9,14 @@
 // ************************** 预设函数与配置 **************************
 
 if(window.AmysqlMainObject)
-{
+{ 
+
 	var PreviousChangeStatus;
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlPreviousTag',
-			'PlugName':'上滑动小标签插件',
-			'PlugAbout':'点击向上滑动标签列表，属于小标签插件。',
+			'PlugName':L.AmysqlPreviousTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlPreviousTagLanguage.PlugAbout,
 			'Sort':'MinTag',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -70,7 +71,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlTabMinJson':[{
 			'order':8,
 			'id':'Previous', 
-			'name':'向下滑动',
+			'name':L.AmysqlPreviousTagLanguage.name,
 			'action':function ()
 			{
 				// 点击也改状态

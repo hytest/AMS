@@ -33,8 +33,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'ShowAbout',
-			'ExtendName':'关于Amysql',
-			'ExtendAbout':'显示Amysql信息',
+			'ExtendName':L.ShowAbout,
+			'ExtendAbout':L.ShowAmysqlInfo,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',

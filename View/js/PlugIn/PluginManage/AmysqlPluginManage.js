@@ -10,12 +10,13 @@
 
 if(window.AmysqlMainObject)
 {
+
 	var AmysqlPluginManageTempData = [];
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlPluginManage',
-			'PlugName':'插件管理',
-			'PlugAbout':'管理查看您系统已安装的插件，随时关闭或开启插件。Notice:保证插件能拥有最高的管理权限请第一个引用本插件。',
+			'PlugName':L.AmysqlPluginManageLanguage.PlugName,
+			'PlugAbout':L.AmysqlPluginManageLanguage.PlugAbout,
 			'Sort':'Menu',
 			'Version':'2.00',
 			'Date':'2012-03-14',
@@ -50,7 +51,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlLNIJson':[{
 			'order':5,
 			'id':'PlugAmysql', 
-			'name':'系统插件管理',
+			'name':L.AmysqlPluginManageLanguage.name,
 			'PlugIn':true,
 			'url':'js/PlugIn/PluginManage/AmysqlPluginManage.js'
 		}]
@@ -62,7 +63,8 @@ if(window.AmysqlMainObject)
 
 if(window.ExtendContent)
 {
-	var AmysqlTagWindow = parent.parent.window.frames.AmysqlTag;
+	var R_W = parent.parent;
+	var AmysqlTagWindow = R_W.window.frames.AmysqlTag;
 	var AmysqlParentWindow = parent.window;
 	var AmysqlRootWindow = parent.parent.window;
 
@@ -145,12 +147,12 @@ if(window.ExtendContent)
 		}
 		
 		this.SumDiv = C('DIV', {'className':'SumDiv'});
-		C(this.SumDiv, 'In', [C('font','In','总共有: '),C('B', 'In', this.ItemSum),C('font','In','个插件。<b>Notice:</b>设置后重新载入系统才生效。')]);
+		this.SumDiv.innerHTML = R_W.printf(R_W.L.AmysqlPluginManageLanguage.Count, {'sum':this.ItemSum});
 
 		document.body.innerHTML = '';
 		C(document.body, 'In', [
 			C('link',{'type':'text/css','rel':'stylesheet','href':'js/PlugIn/PluginManage/style.css'}),
-			C(C('span','In', '系统插件管理'), {'id':'h1'}),
+			C(C('span','In', R_W.L.AmysqlPluginManageLanguage.name), {'id':'h1'}),
 			this.AmysqlPlugList, this.SumDiv
 		]);
 	}

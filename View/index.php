@@ -1,8 +1,11 @@
 <?php include('AmysqlHeader.php'); ?>
 
-<script> var _Http = <?php echo json_encode(_Http);?>;</script>
+<script> 
+var _Http = <?php echo json_encode(_Http);?>;
+var _L = <?php echo json_encode($AmysqlLanguage);?>;
+</script>
+<script src="View/js/language/<?php echo $AmysqlLanguage;?>.js"></script>
 <script src="View/js/AmysqlConfig.js"></script>
-<script src="View/js/AmysqlLanguage.js"></script>
 <script src="View/js/AmysqlMain.js"></script>
 
 <script src="View/js/PlugIn/PluginManage/AmysqlPluginManage.js"></script>

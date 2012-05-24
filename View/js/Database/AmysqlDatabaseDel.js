@@ -19,7 +19,7 @@ ExtendArray.push({
 						{
 							SqlSubmitFormObject.ActionOperation.value == 1;
 							SqlSubmitFormObject.operation_sql_text.value = 'DROP DATABASE `' + SqlKeyword(DatabaseName) + '`';
-							SqlSubmitFormObject.UpOperationSqlNotice('确定<font color="red"><b> 删除 </b></font>数据库: ' + DatabaseName + ' ?' , 0);
+							SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmdeletionDatabase, {'list':DatabaseName, 'del':'<font color="red"><b> ' + L.Del + '</b></font>'}) , 0);
 							SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 						}
 					});
@@ -31,8 +31,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'DatabaseDel',
-			'ExtendName':'删除数据库',
-			'ExtendAbout':'删除数据库扩展。',
+			'ExtendName':L.DeleteDatabase,
+			'ExtendAbout':L.DeleteDatabaseAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',

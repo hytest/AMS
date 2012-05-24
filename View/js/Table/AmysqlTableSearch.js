@@ -41,8 +41,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableSearch',
-			'ExtendName':'表数据搜索',
-			'ExtendAbout':'搜索表数据扩展。',
+			'ExtendName':L.SearchTable,
+			'ExtendAbout':L.SearchTableAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -57,7 +57,7 @@ var TableSearch = function ()
 {
 	this.TableSearchForm = C('form', {'id':'TableSearchForm', 'target':'GetTableData', 'method':'POST'});
 	this.Slist =  C('div', {'id':'TableSearch'});			// 表格块
-	this.TSsubmit = C('input', {'type':'Submit', 'value':'搜索'});
+	this.TSsubmit = C('input', {'type':'Submit', 'value':L.Search});
 	this.TSPage = C('input', {'type':'hidden', 'name':'page', 'value':'1'});
 	this.TSSql = C('input', {'type':'hidden', 'name':'sql'});
 	this._IfShow = false;
@@ -84,7 +84,7 @@ var TableSearch = function ()
 		this.table_tbody = C('tbody');					// 表格内容
 		this.ActionTr =  C('tr');;						// 操作的TR
 
-		var htr = C('tr', 'In', new Array(C('th','In','显示'), C('th','In','字段'), C('th','In','类型'), C('th','In','整理'),C('th','In','默认'),C('th','In','操作符'),C('th','In','值')));
+		var htr = C('tr', 'In', new Array(C('th','In',L.Selects), C('th','In',L.Field), C('th','In',L.Type), C('th','In',L.Collations),C('th','In',L.DefaultVal),C('th','In',L.Operator),C('th','In',L.Value)));
 		this.table_thead.appendChild(htr);
 
 		var ItemSum = this.SItem.length;
@@ -225,7 +225,7 @@ var TableSearch = function ()
 
 		}
 		// 操作的Tr ****************************************
-		this.ActionTr.AllSelect = C('a','In','全选');
+		this.ActionTr.AllSelect = C('a','In',L.SelectAll);
 		with(this)
 		{
 			ActionTr.AllSelect.onclick = function ()
@@ -236,7 +236,7 @@ var TableSearch = function ()
 				}
 			}
 		}
-		this.ActionTr.NoAllSelect = C('a','In','全不选');
+		this.ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 		with(this)
 		{
 			ActionTr.NoAllSelect.onclick = function ()
@@ -247,7 +247,7 @@ var TableSearch = function ()
 				}
 			}
 		}
-		this.ActionTr.OppositeSelect = C('a','In','反选');
+		this.ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 		with(this)
 		{
 			ActionTr.OppositeSelect.onclick = function ()
@@ -258,7 +258,7 @@ var TableSearch = function ()
 				}
 			}
 		}
-		this.ActionTr.ListSelect = C('a',{'innerHTML':'选择','className':'ico ico_select'});
+		this.ActionTr.ListSelect = C('a',{'innerHTML':L.Selects,'className':'ico ico_select'});
 
 		this.ActionTr.td = C('td','In','');
 		this.ActionTr.td.className = 'ActionTd';
@@ -360,7 +360,7 @@ var TableSearch = function ()
 			{
 				'MenuId':'TableSearchFormMenu', 'AreaDomID':'TableSearchForm',
 				'MenuList':[
-					{'id':'TSedit', 'name':'搜索', 'KeyCodeTag':'S', 'ico':'ico_search2', 'functions':function (){
+					{'id':'TSedit', 'name':L.Search, 'KeyCodeTag':'S', 'ico':'ico_search2', 'functions':function (){
 						o.TableSearchForm.onsubmit();
 					}}
 				],

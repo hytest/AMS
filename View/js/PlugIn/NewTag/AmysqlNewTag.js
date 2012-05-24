@@ -8,11 +8,12 @@
 
 if(window.AmysqlMainObject)
 {
+
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlNewTag',
-			'PlugName':'新建窗口插件',
-			'PlugAbout':'新建一个窗口打开网站。',
+			'PlugName':L.AmysqlNewTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlNewTagLanguage.PlugAbout,
 			'Sort':'Menu',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -23,7 +24,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlLNIJson':[{
 			'order':1,
 			'id':'NewTag', 
-			'name':'新建标签窗口', 
+			'name':L.AmysqlNewTagLanguage.name, 
 			'PlugIn':true,
 			'action':function ()
 			{

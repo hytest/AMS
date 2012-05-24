@@ -33,8 +33,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'Engines',
-			'ExtendName':'mysql引擎列表',
-			'ExtendAbout':'查看MYSQL支持的引擎扩展。',
+			'ExtendName':L.MysqlEngine,
+			'ExtendAbout':L.MysqlEngineAbout,
 			'Version':'1.00',
 			'Date':'2012-05-03',
 			'WebSite':'http://amysql.com',

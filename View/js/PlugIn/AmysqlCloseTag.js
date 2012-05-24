@@ -10,11 +10,12 @@
 
 if(window.AmysqlMainObject)
 {
+	
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlCloseTag',
-			'PlugName':'关闭小标签插件',
-			'PlugAbout':'点击关闭当前打开的标签，属于小标签插件。',
+			'PlugName':L.AmysqlCloseTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlCloseTagLanguage.PlugAbout,
 			'Sort':'MinTag',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -68,7 +69,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlTabMinJson':[{
 			'order':6,
 			'id':'Close', 
-			'name':'关闭标签',
+			'name':L.AmysqlCloseTagLanguage.name,
 			'action':function ()
 			{
 				_AmysqlTag.AmysqlTabObject.GoLocation(false, _AmysqlTag.AmysqlTabObject.LastClickItem.TagListKey - 1);		// 跳到标签位置

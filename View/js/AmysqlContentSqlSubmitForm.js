@@ -88,7 +88,7 @@ var AmysqlSqlSubmitForm = function ()
 		// 点击确认操作SQL
 		confirm_sql.onclick = function ()
 		{
-			ConfirmSqlSubmit('再次确认：' + (OP_SqlNotice.innerText ? OP_SqlNotice.innerText : OP_SqlNotice.textContent));
+			ConfirmSqlSubmit(L.Reconfirmed + '：' + (OP_SqlNotice.innerText ? OP_SqlNotice.innerText : OP_SqlNotice.textContent));
 		}
 
 		// 取消确认操作SQL

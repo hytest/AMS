@@ -13,6 +13,7 @@ class ams extends AmysqlController
 	public $sql;							// 当前查询的SQL
 	public $SqlData;						// 查询SQL的数据
 	public $PageShow = 100;					// 页默认显示记录数
+	public $SystemConfig;					// 系统设置参数
 
 
 
@@ -22,8 +23,11 @@ class ams extends AmysqlController
 	{
 		if($this -> indexs) return;
 		$this -> _class('Functions');
+		Functions::AutoLogin();				// 自动登录
+		Functions::SetSystem();
 		$this -> indexs = $this ->  _model('indexs');
 	}
+	
 
 
 	// 打开新窗口 
@@ -194,6 +198,7 @@ class ams extends AmysqlController
 
 		// 系统SQL
 		$AmysqlSql = Functions::AmysqlSql($this -> sql);
+		$this -> AmysqlSql = $AmysqlSql ? true : false;
 		$this -> SqlData = ($AmysqlSql) ? Functions::AmysqlSqlData($this -> _file($AmysqlSql), $this -> MysqlFetchType) : 
 			$this -> indexs -> GetSqlData($this -> sql, $NewSql, array($StartRead, $this -> PageShow), $this -> MysqlFetchType);
 		// SqlData[0] 数据 OR 报错,  SqlData[1] 执行时间, SqlData[2] 所有数据总数, SqlData[3] sql的字段
@@ -274,7 +279,6 @@ class ams extends AmysqlController
 		$this -> DatabaseName = (!isset($_GET['DatabaseName']) || empty($_GET['DatabaseName'])) ? null : urldecode($_GET['DatabaseName']);
 		$this -> TableName = (!isset($_GET['TableName']) || empty($_GET['TableName'])) ? null : urldecode($_GET['TableName']);
 		$this -> QueryBaseSql = 'SELECT * FROM `' . Functions::SqlKeyword($this -> TableName) . '`';		
-		$this -> PageShow = 100;
 		$this -> AmysqlSqlSubmit();
 
 

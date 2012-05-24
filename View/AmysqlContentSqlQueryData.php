@@ -1,9 +1,18 @@
-<font id="SqlNotice"> 
-	以下<font title="<?php echo $sql;?>" color="blue">SQL</font>执行完成，总 <b><?php echo number_format($SqlData[2]);?></b> 条记录。
-	( 系统查询<font title="<?php echo $NewSql;?>" color="blue">SQL</font>花费 <?php echo $SqlData[1];?> 秒， 当前显示以下<font title="<?php echo $sql;?>" color="blue">SQL</font>的第 <i><?php echo $StartRead;?> ~ <?php echo ($SqlData[2] < $PageShow || $QueryResultSum < $PageShow) ? $SqlData[2] : $StartRead+$PageShow;?> &nbsp;</i>行。)
-</font>
-
 <script>
+var SqlNoticeSql = parent.printf(parent.L.SqlQuery, 
+	{
+		'SQL1':<?php echo json_encode('<font title="' . $sql . '" color="blue">SQL</font>');?>, 
+		'sum':'<b><?php echo number_format($SqlData[2]);?></b>',
+		'SQL2':<?php echo json_encode('<font title="' . $NewSql . '" color="blue">SQL</font>');?>, 
+		'time':'<?php echo $SqlData[1];?>', 
+		'SQL3':<?php echo json_encode('<font title="' . $sql . '" color="blue">SQL</font>');?>, 
+		'start':'<?php echo $StartRead;?>', 
+		'end':'<?php echo ($SqlData[2] < $PageShow || $QueryResultSum < $PageShow) ? $SqlData[2] : $StartRead+$PageShow;?>',
+		'i':'<i>',
+		'_i':'</i>'
+	}
+);
+
 with(parent.window)
 {
 	sql = <?php echo json_encode($sql);?>;
@@ -36,6 +45,10 @@ with(parent.window)
 		TableDataObject.AddItem(TableDataArray);
 		TableDataObject._IfShow = false;
 		TableDataObject.show();	// 显示
+
+		<?php if($AmysqlSql) {?> 
+			C(G('ListData'), 'In', JsValue(G('ListData').innerHTML));	// 翻译多语言
+		<?php }?>
 		
 		// 有分页列表
 		if(G('PageListTop'))
@@ -56,12 +69,12 @@ with(parent.window)
 
 	// 更新页面的SQL
 	if(UpSqlOriginal) SqlSubmitFormObject.SqlformoOriginal.value = sql;
-	SqlEdit.setValue(sql + "\n\n\n");
+	SqlEdit.setValue(sql + "<?php echo str_repeat('\\n', $SystemConfig -> SqlLine);?>");
 	SqlSubmitFormObject.sql_post.value = sql;
 
 }
 
-var SqlNotice = parent.SqlStatus ? document.getElementById('SqlNotice').innerHTML : <?php echo json_encode($SqlData[0]);?>;
+var SqlNotice = parent.SqlStatus ? SqlNoticeSql : <?php echo json_encode($SqlData[0]);?>;
 parent.SqlSubmitFormObject.UpSqlNotice(SqlNotice, parent.SqlStatus);
 parent.SqlSubmitFormObject.ActionOperation.value = 0;
 
@@ -72,9 +85,9 @@ parent.SqlSubmitFormObject.ActionOperation.value = 0;
 if(parent.window.OperationQuery != '')
 {
 	if(parent.window.OperationQuery[0])	// 执行有报错
-		parent.window.SqlSubmitFormObject.UpOperationSqlNotice('影响数据有 <b>' + parent.window.OperationQuery[1] + '</b> 行! 错误语句: <br />' + parent.window.OperationQuery[0], 0);
+		parent.window.SqlSubmitFormObject.UpOperationSqlNotice(parent.printf(parent.L.SqlError, {'number':'<b>' + parent.window.OperationQuery[1] + '</b>'}) + ' <br />' + parent.window.OperationQuery[0], 0);
 	else
-		parent.window.SqlSubmitFormObject.UpOperationSqlNotice('SQL已完美执行， 影响数据有 <b>' + parent.window.OperationQuery[1] + '</b> 行!' , 1);
+		parent.window.SqlSubmitFormObject.UpOperationSqlNotice(parent.printf(parent.L.SqlOk, {'number':'<b>' + parent.window.OperationQuery[1] + '</b>'}) , 1);
 
 	parent.window.SqlSubmitFormObject.operation_sql_text.value = <?php echo json_encode($operation_sql_text);?>;
 }

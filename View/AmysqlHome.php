@@ -17,6 +17,7 @@ var page = <?php echo $page;?>;									// 当前页码
 var PageShow = <?php echo $PageShow;?>;							// 一页显示
 var PageSum = <?php echo ceil($SqlData[2]/$PageShow);?>;		// 总页数量
 
+
 var ExtendArray = [];											// 扩展
 var DefaultActiveSetID = 'N_DatabaseList';						// 查询Sql默认激活的内容块
 var ActiveSetID = null;

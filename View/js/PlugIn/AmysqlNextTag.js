@@ -10,12 +10,13 @@
 
 if(window.AmysqlMainObject)
 {
+
 	var NextChangeStatus;
 	AmysqlMainObject.AmysqlExtend.push({
 		'_ExtendInfo':{
 			'ExtendId':'AmysqlNextTag',
-			'PlugName':'下滑动小标签插件',
-			'PlugAbout':'点击向下滑动标签列表，属于小标签插件。',
+			'PlugName':L.AmysqlNextTagLanguage.PlugName,
+			'PlugAbout':L.AmysqlNextTagLanguage.PlugAbout,
 			'Sort':'MinTag',
 			'Version':'1.10',
 			'Date':'2011-05-19',
@@ -72,7 +73,7 @@ if(window.AmysqlMainObject)
 		'_AmysqlTabMinJson':[{
 			'order':7,
 			'id':'Next', 
-			'name':'向下滑动',
+			'name':L.AmysqlNextTagLanguage.name,
 			'action':function ()
 			{
 				// 点击也改状态

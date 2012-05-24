@@ -44,8 +44,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'DatabaseList',
-			'ExtendName':'数据库列表',
-			'ExtendAbout':'数据库列表查阅、修改、删除操作扩展。注意：此扩展不可删除。',
+			'ExtendName':L.DatabaseList,
+			'ExtendAbout':L.DatabaseListAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -210,7 +210,7 @@ var TableData = function ()
 		this.ActionTr = C('tr');
 
 		// 定义操作的Tr *********************************************************************************************************
-		this.ActionTr.AllSelect = C('a','In','全选');
+		this.ActionTr.AllSelect = C('a','In', L.SelectAll);
 		with(this)
 		{
 			ActionTr.AllSelect.onclick = function ()
@@ -222,7 +222,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.NoAllSelect = C('a','In','全不选');
+		this.ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 		with(this)
 		{
 			ActionTr.NoAllSelect.onclick = function ()
@@ -234,7 +234,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.OppositeSelect = C('a','In','反选');
+		this.ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 		with(this)
 		{
 			ActionTr.OppositeSelect.onclick = function ()
@@ -246,8 +246,8 @@ var TableData = function ()
 			}
 		}
 		
-		this.ActionTr.ListSelect = C('a', {'innerHTML':'选择','className':'ico ico_select'});
-		this.ActionTr.del = C('a', {'innerHTML':'删除','className': 'ico ico_del','title':'删除选择项'});
+		this.ActionTr.ListSelect = C('a', {'innerHTML':L.Selects,'className':'ico ico_select'});
+		this.ActionTr.del = C('a', {'innerHTML':L.Del,'className': 'ico ico_del','title':L.DeleteSelectedItem});
 
 		if(CanEdit)
 		{
@@ -277,7 +277,7 @@ var TableData = function ()
 					}
 					if(DelTable.length == 0) return false;
 					SqlSubmitFormObject.operation_sql_text.value = DelSql.join(";\n");
-					SqlSubmitFormObject.UpOperationSqlNotice('确定删除数据库：' + DelTable.join('`,`') + ' ?' , 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmdeletionDatabase, {'list':DelTable.join(' , '), 'del':'<font color="red"><b> ' + L.Del + ' </b></font>'}) , 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 											
@@ -307,7 +307,7 @@ var TableData = function ()
 			if(CanEdit)
 			{
 				
-				this.Item[i].del = C('a', {'innerHTML':'删除','className':'ico2 ico_del2','title':'删除数据库'});
+				this.Item[i].del = C('a', {'innerHTML':L.Del,'className':'ico2 ico_del2','title':L.DeleteDatabase});
 				this.Item[i].del.key = i;	// 下标
 				
 				this.Item[i].btr.BtrAction = C('td','In',new Array(
@@ -356,7 +356,7 @@ var TableData = function ()
 						obj.del.onclick = function ()
 						{
 							var sql = 'DROP DATABASE `' + SqlKeyword(obj.arr.Database) + '`';
-							SqlSubmitFormObject.ConfirmSqlSubmit('确定删除数据库: `' + obj.arr.Database + " ? \n\r\n\r" + sql, sql);
+							SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.ConfirmdeletionDatabase, {'list':obj.arr.Database, 'del':L.Del}) + " \n\r\n\r" + sql, sql);
 						}
 
 						obj.Database.onclick = function (show)
@@ -462,7 +462,7 @@ var TableData = function ()
 				this.ActionTr.NoAllSelect,
 				C('span','In','/'),
 				this.ActionTr.OppositeSelect,
-				C('span','In',' &nbsp; &nbsp; 选择项: '),
+				C('span','In',' &nbsp; &nbsp; ' + L.SelectItems + ': '),
 				this.ActionTr.del
 				));
 			}
@@ -515,21 +515,21 @@ var TableData = function ()
 				'MenuId':'AmysqlDatabaseTableDataMenu', 'AreaDomID':'DatabaseDataBlock',
 				'MenuList':[
 					
-					{'id':'DLdel', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'DLdel', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.Item[o.RightButtonRow].del.onclick();
 					}},			
-					{'id':'DLDelAll', 'name':'删除已选中项', 'functions':function (){
+					{'id':'DLDelAll', 'name':L.DeleteSelectedItems, 'functions':function (){
 						o.ActionTr.del.onclick();
 					}},	
 					{'className': 'separator'},
-					{'id':'DLopen', 'name':'打开选中项', 'KeyCodeTag':'T', 'ico':'ico_open2', 'functions':function (){
+					{'id':'DLopen', 'name':L.OpenSelectedItem, 'KeyCodeTag':'T', 'ico':'ico_open2', 'functions':function (){
 						o.ActionTr.open();
 					}},
-					{'id':'DLCancelSelect', 'name':'取消选中项', 'functions':function (){
+					{'id':'DLCancelSelect', 'name':L.UncheckItem, 'functions':function (){
 						o.ActionTr.NoAllSelect.onclick();
 					}},
 					{'className': 'separator'},
-					{'id':'DLrenovate', 'name':'重新加载本页数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'DLrenovate', 'name':L.ReloadPageData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						SqlSubmitFormObject.sql_post.value = SqlSubmitFormObject.SqlformoOriginal.value;
 						G("SqlForm").onsubmit(parseInt(G("SqlformPage").value)) 
 					}},
@@ -569,7 +569,7 @@ var TableData = function ()
 			{
 				'MenuId':'AmysqlDatabaseTableDataMenu2', 'AreaDomID':'DatabaseDataBlock',
 				'MenuList':[
-					{'id':'DLrenovate', 'name':'重新加载本页数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'DLrenovate', 'name':L.ReloadPageData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						SqlSubmitFormObject.sql_post.value = SqlSubmitFormObject.SqlformoOriginal.value;
 						G("SqlForm").onsubmit(parseInt(G("SqlformPage").value)) 
 					}},

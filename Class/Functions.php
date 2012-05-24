@@ -23,10 +23,22 @@ class Functions
 	}
 	// ******************************
 
-	// 过滤Sql其余字符
+	// 过滤Sql其余字符用于相关判断
 	function FilterSqlElse($sql)
 	{
 		$sql = trim($sql);
+
+		// 过滤SQL的注释
+		$preg = "/(\\\')|" . '(\\\")' . "|(\\\`)/iU";
+		$sql = self::StrSplit($sql, null, $preg, 'A-comment');
+		$preg = "/\'(.*)\'|`(.*)`|\"(.*)\"/iU";
+		$sql = self::StrSplit($sql, null, $preg, 'B-comment');
+		$preg = "/([-]{2,}(.*))|(\/\*(\s|.)*?\*\/)/i";
+		$sql = preg_replace($preg, '', $sql);
+
+		$sql = self::StrSplit($sql, '', null, 'B-comment');
+		$sql = self::StrSplit($sql, '', null, 'A-comment');
+
 		$sql = str_replace(array("\n", "\r", "\t"), ' ', $sql);
 		Return $sql;
 	}
@@ -35,7 +47,7 @@ class Functions
 	function is_QueryData($sql)
 	{
 		$sql = self::FilterSqlElse($sql);
-		if (preg_match('/^(SELECT|SHOW|DESCRIBE|EXPLAIN|CHECK|ANALYZE|REPAIR|OPTIMIZE)\s+(.*)$/i', $sql))
+		if (preg_match('/^(SELECT|SHOW|DESC|DESCRIBE|EXPLAIN|CHECK|ANALYZE|REPAIR|OPTIMIZE)\s+(.*)$/i', $sql))
 			Return true;
 		Return false;
 	}
@@ -93,9 +105,9 @@ class Functions
 	{
 		$sql = self::FilterSqlElse($sql);
 		if (preg_match('/^SHOW\s+SQL\s+HELP\s*(.*)$/i', $sql))
-			Return 'DataFile_show sql help';
+			Return 'DataFile_sql_show sql help.sql';
 		elseif (preg_match('/^SHOW\s+ABOUT\s*(.*)$/i', $sql))
-			Return 'DataFile_show about';
+			Return 'DataFile_sql_show about.sql';
 		Return false;
 	}
 	
@@ -399,7 +411,7 @@ class Functions
 	}
 
 
-	// *********************************************************************
+	// *********************************************************************************************************************
 
 	// 统计字节
 	function CountSize($size) 
@@ -411,6 +423,85 @@ class Functions
 			$size /= 1024;
 		}
 	}
+	
+	// 统计时间
+	function CountTime($time) 
+	{
+		$TimeList = array(
+			array('second',1,60), array('minute',60,3600), array('hour',3600,86400), 
+			array('day',86400,2592000), array('month',2592000,31104000), array('year',31104000, NULL)
+		);
+
+		foreach ($TimeList as $val)
+		{
+			if($time >= $val[1] && ($time < $val[2] || $val[2] === NULL)) 
+				Return array(round($time / $val[1], 1) , $val[0]);
+		}
+	}
+
+
+	// 自动登录数据
+	function AutoLogin()
+	{
+		global $Amysql;		// AMP进程
+
+		if(isset($_COOKIE['LoginFileName']))
+		{
+			$LoginFile = 'DataFile_login_'.$_COOKIE['LoginFileName'].'.login';
+			$LoginData = $Amysql -> AmysqlProcess -> AmysqlController -> _file($LoginFile);
+			$LoginData = json_decode(trim($LoginData, '<?php //'));
+			
+			// 登录KEY、IP一致与时间有效即通过验证
+			if (!empty($LoginData) && isset($LoginData -> LoginKey) && 
+				isset($_COOKIE['LoginKey']) && $LoginData -> LoginKey == $_COOKIE['LoginKey'] && 
+				$LoginData -> ip == $_SERVER['REMOTE_ADDR'] && 
+				$LoginData -> AvailableTime >  time()
+			)
+			{
+				// 验证通过增加持续时间
+				$LoginData -> AvailableTime = time() + $LoginData -> AddTime;
+				$Amysql -> AmysqlProcess -> AmysqlController -> _plus($LoginFile, '<?php //' . json_encode($LoginData));
+
+				// 直接调用AMP系统控制器进程更改MYSQL连接配置
+				$Amysql -> AmysqlProcess -> AmysqlController -> _DBSet(array('User' => $LoginData -> User, 'Password' => $LoginData -> Password));
+				Return true;
+				
+			}
+			
+			$Amysql -> AmysqlProcess -> AmysqlController -> _del($LoginFile);	// 验证失败删除数据文件
+		}
+		
+		// 验证失败 **************************************
+		if(isset($LoginData) && !empty($LoginData -> AddTime))
+		{
+			$TimeStr = Functions::CountTime($LoginData -> AddTime);
+			$_SESSION['LoginError'] = '{js}printf(L.Timeout, {"time":"' . $TimeStr[0] . '", "unit":"' . $TimeStr[1] . '"}){/js}';
+		}
+
+		if (isset($_SESSION['LoginError']) && !empty($_SESSION['LoginError']) && (isset($_COOKIE['LogoutNotice']) && $_COOKIE['LogoutNotice'] == '1'))
+		{
+			// 直接调用AMP系统控制器进程载入AmysqlNotice模板
+			$Amysql -> AmysqlProcess -> AmysqlController -> AmysqlTemplates -> TemplateValue['AmysqlLanguage'] = isset($_COOKIE['Language']) ? $_COOKIE['Language'] : 'en';
+			$Amysql -> AmysqlProcess -> AmysqlController -> AmysqlTemplates -> TemplateValue['LoginError'] = $_SESSION['LoginError'] . "\n\n{js}L.NowLogin{/js}";
+			$Amysql -> AmysqlProcess -> AmysqlController -> _view('AmysqlNotice');
+			exit();
+		}
+
+		Return false;
+	}
+
+	// 设置系统
+	function SetSystem()
+	{
+		global $Amysql;		// AMP进程
+		$SystemConfigData = $Amysql -> AmysqlProcess -> AmysqlController -> _file('DataFile_system_config.system');
+		$SystemConfigData = json_decode(trim($SystemConfigData, '<?php //'));
+		$Amysql -> AmysqlProcess -> AmysqlController -> SystemConfig = $SystemConfigData;
+		$Amysql -> AmysqlProcess -> AmysqlController -> PageShow = $SystemConfigData -> TableDataLine;	// 更改页显示数
+		setcookie('LogoutNotice', $SystemConfigData -> LogoutNotice, time()*1.1);						// 超时是否提示
+		setcookie('Language', $SystemConfigData -> language, time()*1.1);								// 语言
+	}
+
 }
 
 ?>

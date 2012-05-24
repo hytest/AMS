@@ -233,10 +233,11 @@ class indexs extends AmysqlModel
 	{
 		$sql = "SHOW STORAGE ENGINES";
 		$result = $this -> _query($sql);
+		$i = 1;
 		while ($rs = mysql_fetch_assoc($result))
 		{
 			if($rs['Support'] != 'NO')
-				$data[] = $rs['Engine'];
+				$data[($rs['Support'] == 'DEFAULT' ? 0 : ++$i)] = $rs['Engine'];
 		}
 		Return $data;
 	}

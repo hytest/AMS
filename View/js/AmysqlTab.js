@@ -581,7 +581,7 @@ var AmysqlTab = function ()
 		this.N = G('navigation');
 		with(this)
 		{
-			New.title = '菜单列表';
+			New.title = L.Menu;
 			New.onclick = function ()
 			{
 				if(typeof(parent.window.frames.AmysqlLeft.AmysqlLNO) == 'object')

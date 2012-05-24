@@ -36,8 +36,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableList',
-			'ExtendName':'数据表',
-			'ExtendAbout':'数据库的数据表列表查阅、修改、删除操作扩展。注意：此扩展不可删除。',
+			'ExtendName':L.TableList,
+			'ExtendAbout':L.TableListAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -202,7 +202,7 @@ var TableData = function ()
 		this.ActionTr = C('tr');
 
 		// 定义操作的Tr *********************************************************************************************************
-		this.ActionTr.AllSelect = C('a','In','全选');
+		this.ActionTr.AllSelect = C('a','In',L.SelectAll);
 		with(this)
 		{
 			ActionTr.AllSelect.onclick = function ()
@@ -214,7 +214,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.NoAllSelect = C('a','In','全不选');
+		this.ActionTr.NoAllSelect = C('a','In',L.ClearAll);
 		with(this)
 		{
 			ActionTr.NoAllSelect.onclick = function ()
@@ -226,7 +226,7 @@ var TableData = function ()
 			}
 		}
 
-		this.ActionTr.OppositeSelect = C('a','In','反选');
+		this.ActionTr.OppositeSelect = C('a','In',L.InvertSelect);
 		with(this)
 		{
 			ActionTr.OppositeSelect.onclick = function ()
@@ -238,10 +238,10 @@ var TableData = function ()
 			}
 		}
 		
-		this.ActionTr.ListSelect = C('a', {'innerHTML':'选择','className':'ico ico_select'});
-		this.ActionTr.edit = C('a', {'innerHTML':'编辑','className': 'ico ico_edit','title':'编辑选择项'});
-		this.ActionTr.del = C('a', {'innerHTML':'删除','className': 'ico ico_del','title':'删除选择项'});
-		this.ActionTr.save = C('a', {'innerHTML':'保存','className': 'ico ico_save','title':'保存选择项'});
+		this.ActionTr.ListSelect = C('a', {'innerHTML':L.Selects,'className':'ico ico_select'});
+		this.ActionTr.edit = C('a', {'innerHTML':L.Edit,'className': 'ico ico_edit','title':L.EditSelect});
+		this.ActionTr.del = C('a', {'innerHTML':L.Del,'className': 'ico ico_del','title':L.DeleteSelectedItem});
+		this.ActionTr.save = C('a', {'innerHTML':L.Save,'className': 'ico ico_save','title':L.SaveSelect});
 
 		if(CanEdit)
 		{
@@ -269,7 +269,7 @@ var TableData = function ()
 							if(is_null(Item[key].arr.Engine) && is_null(Item[key].arr.Rows))
 							{
 								DelTableSql.push('DROP VIEW `' + TableName + '`');
-								DelTable.push(TableName + '(视图)');
+								DelTable.push(TableName + '(' + L.View + ')');
 							}
 							else 
 							{
@@ -280,7 +280,7 @@ var TableData = function ()
 					}
 					if(DelTable.length == 0) return false;
 					SqlSubmitFormObject.operation_sql_text.value = DelTableSql.join(";\n");
-					SqlSubmitFormObject.UpOperationSqlNotice('确定删除数据表：' + DelTable.join(', ') + ' ?' , 0);
+					SqlSubmitFormObject.UpOperationSqlNotice(printf(L.ConfirmDelTable, {'list':DelTable.join(' , '), 'del':L.Del2}), 0);
 					SqlSubmitFormObject.confirm_sql.style.display = 'inline';
 				}
 				// 选中行编辑
@@ -365,7 +365,7 @@ var TableData = function ()
 					if (AllSql.length > 0)
 						SqlSubmitFormObject.ConfirmSqlSubmit(null, AllSql.join("; \n"));
 					else
-						alert('表结构无有更改项，不需保存。');
+						alert(L.SaveTableNotSave);
 				}
 							
 			}
@@ -393,12 +393,12 @@ var TableData = function ()
 
 			if(CanEdit)
 			{
-				this.Item[i].browse = C('a', {'innerHTML':'浏览','className':'ico2 ico_browse2','title':'浏览表数据'});
-				this.Item[i].structure = C('a', {'innerHTML':'结构','className':'ico2 ico_structure2','title':'查看表结构'});
-				this.Item[i].search = C('a', {'innerHTML':'搜索','className':'ico2 ico_search2','title':'搜索表数据'});
-				this.Item[i].insert = C('a', {'innerHTML':'新增','className':'ico2 ico_insert2','title':'新增表数据'});
-				this.Item[i].edit = C('a', {'innerHTML':'编辑','className':'ico2 ico_edit2','title':'编辑表结构'});
-				this.Item[i].del = C('a', {'innerHTML':'删除','className':'ico2 ico_del2','title':'删除数据表'});
+				this.Item[i].browse = C('a', {'innerHTML':L.Browse_,'className':'ico2 ico_browse2','title':L.BrowseTable});
+				this.Item[i].structure = C('a', {'innerHTML':L.Structure,'className':'ico2 ico_structure2','title':L.BrowseTableStructure});
+				this.Item[i].search = C('a', {'innerHTML':L.Search,'className':'ico2 ico_search2','title':L.SearchTable});
+				this.Item[i].insert = C('a', {'innerHTML':L.Add,'className':'ico2 ico_insert2','title':L.AddTableData});
+				this.Item[i].edit = C('a', {'innerHTML':L.Edit,'className':'ico2 ico_edit2','title':L.EditTableStructure});
+				this.Item[i].del = C('a', {'innerHTML':L.Del,'className':'ico2 ico_del2','title':L.DelTableData});
 				this.Item[i].del.key = i;	// 下标
 				
 				this.Item[i].btr.BtrAction = C('td','In',new Array(
@@ -539,10 +539,10 @@ var TableData = function ()
 						{
 							var TempStr = ['TABLE', ''];
 							if(is_null(obj.arr.Engine) && is_null(obj.arr.Rows))
-								TempStr = ['VIEW', '(视图)'];
+								TempStr = ['VIEW', '(' + L.View + ')'];
 
 							var sql = 'DROP ' + TempStr[0] + ' `' + SqlKeyword(obj.arr.Name) + '`';
-							SqlSubmitFormObject.ConfirmSqlSubmit('确定删除数据表' + TempStr[1] + ': `' + obj.arr.Name + "` ? \n\r\n\r" + sql, sql);
+							SqlSubmitFormObject.ConfirmSqlSubmit(printf(L.ConfirmDelTable, {'list': TempStr[1] + ': `' + obj.arr.Name, 'del':L.Del2}) + "` \n\r\n\r" + sql, sql);
 						}
 
 						obj.Name.onclick = function (show)
@@ -671,7 +671,7 @@ var TableData = function ()
 				this.ActionTr.NoAllSelect,
 				C('span','In','/'),
 				this.ActionTr.OppositeSelect,
-				C('span','In',' &nbsp; &nbsp; 选择项: '),
+				C('span','In',' &nbsp; &nbsp; ' + L.SelectItems + ': '),
 				this.ActionTr.edit,
 				this.ActionTr.del,
 				this.ActionTr.save
@@ -725,36 +725,36 @@ var TableData = function ()
 			{
 				'MenuId':'AmysqlDatabaseTableDataMenu', 'AreaDomID':'DatabaseDataBlock',
 				'MenuList':[
-					{'id':'TLedit', 'name':'编辑', 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
+					{'id':'TLedit', 'name':L.Edit, 'KeyCodeTag':'E', 'ico':'ico_edit2', 'functions':function (){
 						o.Item[o.RightButtonRow].edit.onclick('edit');
 					}},
-					{'id':'TLEditAll', 'name':'编辑已选中项', 'functions':function (){
+					{'id':'TLEditAll', 'name':L.EditSelects, 'functions':function (){
 						o.ActionTr.edit.onclick('edit');
 					}},
 					{'className':'separator'},
-					{'id':'TLsaves', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'TLsaves', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.ActionTr.save.onclick();
 					}},
 					{'className':'separator'},
-					{'id':'TLdel', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'TLdel', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.Item[o.RightButtonRow].del.onclick();
 					}},			
-					{'id':'TLDelAll', 'name':'删除已选中项', 'functions':function (){
+					{'id':'TLDelAll', 'name':L.DeleteSelectedItems, 'functions':function (){
 						o.ActionTr.del.onclick();
 					}},	
 					{'className': 'separator'},
-					{'id':'TLopen', 'name':'打开选中项', 'KeyCodeTag':'T', 'ico':'ico_open2', 'functions':function (){
+					{'id':'TLopen', 'name':L.OpenSelectedItem, 'KeyCodeTag':'T', 'ico':'ico_open2', 'functions':function (){
 						o.ActionTr.open();
 					}},
 					{'className': 'separator'},
-					{'id':'TLCancelEdit', 'name':'取消编辑', 'KeyCodeTag':'C', 'functions':function (){
+					{'id':'TLCancelEdit', 'name':L.CanceledEdit, 'KeyCodeTag':'C', 'functions':function (){
 						o.ActionTr.edit.onclick('CancelEdit');
 					}},
-					{'id':'TLCancelSelect', 'name':'取消选中项', 'functions':function (){
+					{'id':'TLCancelSelect', 'name':L.UncheckItem, 'functions':function (){
 						o.ActionTr.NoAllSelect.onclick();
 					}},
 					{'className': 'separator'},
-					{'id':'TLrenovate', 'name':'重新加载本页数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'TLrenovate', 'name':L.ReloadPageData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						SqlSubmitFormObject.sql_post.value = SqlSubmitFormObject.SqlformoOriginal.value;
 						G("SqlForm").onsubmit(parseInt(G("SqlformPage").value)) 
 					}},
@@ -798,7 +798,7 @@ var TableData = function ()
 			{
 				'MenuId':'AmysqlDatabaseTableDataMenu2', 'AreaDomID':'DatabaseDataBlock',
 				'MenuList':[
-					{'id':'DLrenovate', 'name':'重新加载本页数据', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'DLrenovate', 'name':L.ReloadPageData, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						SqlSubmitFormObject.sql_post.value = SqlSubmitFormObject.SqlformoOriginal.value;
 						G("SqlForm").onsubmit(parseInt(G("SqlformPage").value)) 
 					}},

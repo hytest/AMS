@@ -26,7 +26,7 @@ var StrOperators = ['LIKE','LIKE %...%','NOT LIKE','=','!=','= \'\'','!= \'\'','
 var TextOperators = ['', 'BINARY','UNSIGNED','UNSIGNED ZEROFILL','on update CURRENT_TIMESTAMP'];
 
 // 索引类型
-var ColumnIndex =  ['', ['选择索引', ['PRIMARY', 'UNIQUE', 'INDEX', 'FULLTEXT']]];
+var ColumnIndex =  ['', [L.SelectIndex, ['PRIMARY', 'UNIQUE', 'INDEX', 'FULLTEXT']]];
 
 // 数据Collations列表
 var Collations = parent.AmysqlCollations;

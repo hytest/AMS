@@ -39,8 +39,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'TableInsert',
-			'ExtendName':'表插入数据',
-			'ExtendAbout':'表插入新数据扩展。',
+			'ExtendName':L.TableInsertData,
+			'ExtendAbout':L.TableInsertDataAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -55,10 +55,10 @@ var TableInsert = function ()
 	this.TableInsertForm = C('form', {'id':'TableInsertForm'});
 	this.Iline = new Array();								// 数据行
 	this.Ilist = C('div', {'id':'TableInsert'});			// 表格块
-	this.TIsubmit = C('input', {'type':'Submit', 'value':'保存'});
+	this.TIsubmit = C('input', {'type':'Submit', 'value':L.Save});
 	this.SetLineAddTitleText = C('input', {'type':'text', 'value':6, 'id':'SetLineAddTitleText'});	//	多少记录显示标题
 	this.SetLineNumText = C('input', {'type':'text', 'value': 1, 'id':'SetLineNum'});					//	插入记录条数
-	this.SetLineNumButton = C('input', {'type':'button', 'value':'重新设定'});
+	this.SetLineNumButton = C('input', {'type':'button', 'value':L.Resets2});
 	this.SetStatus = false;						// 焦点是否在设置行的那一块
 	this._IfShow = false;
 
@@ -105,7 +105,7 @@ var TableInsert = function ()
 				{
 					if(this.Iline[dk].IInput[dki].type == 'text' && this.Iline[dk].IInput[dki].value != '' && this.Iline[dk].IInput[dki].value != this.IItem[dki].COLUMN_DEFAULT)  
 					{
-						if(!confirm('已有新数据输入, 确定重新设置新增行?'))  
+						if(!confirm(L.ConfirmResetLine))  
 						{
 							this.SetLineNumText.blur();
 							this.SetLineAddTitleText.blur();
@@ -145,8 +145,8 @@ var TableInsert = function ()
 		}
 		
 		this.SetLine = C('font', 'In', new Array(
-						C('font', 'In', new Array(C('font', 'In', ' 每'), this.SetLineAddTitleText, C('font', 'In', ' 行增加字段标题。'))),
-						C('font', 'In', ' 插入行数为: '),
+						C('font', 'In', printf(L.InsertAddTitle, {'line':this.SetLineAddTitleText}, 'font')),
+						C('font', 'In', ' ' + L.InsertRowNumber + ' : '),
 						this.SetLineNumText,	
 						this.SetLineNumButton
 					));
@@ -165,7 +165,7 @@ var TableInsert = function ()
 			this.Iline[i] = C('tr');
 			this.Iline[i].key = i;			
 
-			this.Iline[i].del = C('a', {'innerHTML':'删除', 'className':'ico2 ico_del2','title':'删除这条记录'});
+			this.Iline[i].del = C('a', {'innerHTML':L.Del, 'className':'ico2 ico_del2','title':L.DelThisRow});
 			with(this)
 			{
 				(function (obj)
@@ -177,7 +177,7 @@ var TableInsert = function ()
 						{
 							if(obj.IInput[key2].value != '' && obj.IInput[key2].value != IItem[key2].COLUMN_DEFAULT) 
 							{
-								if(!confirm('已输入新数据。确定移除此行记录?'))
+								if(!confirm(L.ConfirmRemoveLine))
 									return false;
 								break;
 							}
@@ -343,11 +343,11 @@ var TableInsert = function ()
 			{
 				'MenuId':'TableInsertFormMenu', 'AreaDomID':'TableInsertForm',
 				'MenuList':[
-					{'id':'TIedit', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'TIedit', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.TableInsertForm.onsubmit();
 					}},
 					{'className': 'separator'},
-					{'id':'TArenovate', 'name':'重置行数', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'TArenovate', 'name':L.ResetLine, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						o.SetLineNumButton.onclick();
 					}},
 				],

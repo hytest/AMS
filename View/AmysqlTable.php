@@ -10,26 +10,26 @@ var UpSqlOriginal = <?php echo json_encode($UpSqlOriginal);?>;
 var TableName = <?php echo json_encode($_GET['TableName']); ?>;			// 表名
 var DatabaseName = <?php echo json_encode($_GET['DatabaseName']); ?>;	// 数据库名
 
-var OperationQuery = <?php echo json_encode($OperationQuery);?>	// 操作Sql结果
+var OperationQuery = <?php echo json_encode($OperationQuery);?>			// 操作Sql结果
 
-var TableFieldList = <?php echo $FieldList;?>;					// 表字段数据
+var TableFieldList = <?php echo $FieldList;?>;							// 表字段数据
 var TableFieldListName = <?php echo json_encode($AllField);?>;			// 表字段名列表
-var TableIndexItem = <?php echo $ShowIndex;?>;					// 表索引数据
+var TableIndexItem = <?php echo $ShowIndex;?>;							// 表索引数据
 
 var TableDataFieldList = <?php echo isset($SqlData[3]) ? json_encode($SqlData[3]): '[]';?>;		// 查询结果字段数据
 var TableDataArray = <?php echo $SqlStatus ? json_encode($SqlData[0]) : '[]';?>;				// 查询结果数据
-var SqlStatus = <?php echo $SqlStatus;?>;						// Sql查询数据是否成功
-var QueryResultSum = <?php echo $QueryResultSum;?>;				// 数据结果数量
-var SqlTableSum = <?php echo $SqlData[2];?>;					// 所有数据总量
+var SqlStatus = <?php echo $SqlStatus;?>;								// Sql查询数据是否成功
+var QueryResultSum = <?php echo $QueryResultSum;?>;						// 数据结果数量
+var SqlTableSum = <?php echo $SqlData[2];?>;							// 所有数据总量
 
-var page = <?php echo $page;?>;									// 当前页码
-var PageShow = <?php echo $PageShow;?>;							// 一页显示
-var PageSum = <?php echo ceil($SqlData[2]/$PageShow);?>;		// 总页数量
+var page = <?php echo $page;?>;											// 当前页码
+var PageShow = <?php echo $PageShow;?>;									// 一页显示
+var PageSum = <?php echo ceil($SqlData[2]/$PageShow);?>;				// 总页数量
+var TableShowIndex = <?php echo $SystemConfig -> TableShowIndex;?>;		// 是否显示索引
 
 
 var ExtendArray = [];											// 扩展
 var StructureUpdateRun = [];									// 结构更新时运行的事件
-
 
 // 版块显示相关
 var DefaultActive = {};

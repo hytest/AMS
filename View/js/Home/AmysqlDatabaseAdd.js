@@ -32,8 +32,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'DatabaseAdd',
-			'ExtendName':'新增数据表',
-			'ExtendAbout':'建立新的数据表扩展。',
+			'ExtendName':L.TableAdds,
+			'ExtendAbout':L.CreateTableExtensionAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
@@ -49,13 +49,13 @@ var AmysqlDatabaseAdd = function ()
 	this.Iline = new Array();																		// 数据行
 	this.Ilist = C('div', {'id':'AmysqlDatabaseAdd'});													// 表格块
 
-	this.TIsubmit = C('input', {'type':'Submit', 'value':'保存'});
+	this.TIsubmit = C('input', {'type':'Submit', 'value':L.Save});
 
 	this.AddTableLineText = C('input', {'type':'text', 'value':'1'}, {'width':'30px'});
-	this.AddTableLine = C('input', {'type':'button', 'value':'添加'});
+	this.AddTableLine = C('input', {'type':'button', 'value':L.Add});
 	this.SetLineAddTitleText = C('input', {'type':'text', 'value':5, 'id':'SetLineAddTitleText'});	//	多少记录显示标题
 	this.SetLineNumText = C('input', {'type':'text', 'value': 3, 'id':'SetLineNum'});				//	插入记录条数
-	this.SetLineNumButton = C('input', {'type':'button', 'value':'设置'});
+	this.SetLineNumButton = C('input', {'type':'button', 'value':L.Set});
 	this.SetStatus = false;																			// 焦点是否在设置行的那一块
 	this.RightButtonRow = null;																		// 当前右键记录
 	this.RightButtonRowTab = null;																		
@@ -87,7 +87,7 @@ var AmysqlDatabaseAdd = function ()
 		this.Iline[i] = C('tr');
 		this.Iline[i].key = i;			
 
-		this.Iline[i].del = C('a', {'innerHTML':'删除', 'className':'ico2 ico_del2','title':'删除这个数据库'});
+		this.Iline[i].del = C('a', {'innerHTML':L.Del, 'className':'ico2 ico_del2','title':L.DeleteThisDatabase});
 		with(this)
 		{
 			(function (obj)
@@ -96,7 +96,7 @@ var AmysqlDatabaseAdd = function ()
 				{
 					if(obj.IInput['DatabaseName'].value != '')  
 					{
-						if(!confirm('已输入新数据, 确定移除此数据库行?')) 
+						if(!confirm(L.RemoveDatabaseRow)) 
 							return false;
 					}
 					obj.parentNode.removeChild(obj);
@@ -180,7 +180,7 @@ var AmysqlDatabaseAdd = function ()
 				var obj = this.Iline[dk];
 				if(obj.IInput['DatabaseName'].value != '')  
 				{
-					if(!confirm('已有新数据输入, 确定重新设置数据库行?'))  
+					if(!confirm(L.ConfirmResetDatabase))  
 					{
 						this.SetLineNumText.blur();
 						this.SetLineAddTitleText.blur();
@@ -192,7 +192,7 @@ var AmysqlDatabaseAdd = function ()
 		}
 
 		if(this._IfShow && !NewAdd) return;
- 		this.IItem = [{'id':'DatabaseName', 'name':'数据库名称'}, {'id':'DatabaseCollations', 'name':'整理校对'}];
+ 		this.IItem = [{'id':'DatabaseName', 'name':L.DatabaseName}, {'id':'DatabaseCollations', 'name':L.Collations}];
 		this.Iline = new Array();
 		// 状态设置 在设置块回车提交就更新行数
 		with (this)
@@ -216,8 +216,8 @@ var AmysqlDatabaseAdd = function ()
 		}
 		
 		this.SetLine = C('font', 'In', new Array(
-						C('font', 'In', new Array(C('font', 'In', ' &nbsp; 重置: '), this.SetLineAddTitleText, C('font', 'In', ' 行增加标题,'))),
-						C('font', 'In', ' 设置数据库数为: '),
+						C('font', 'In', new Array(C('font', 'In', ' &nbsp; ' + L.Resets + ': '), this.SetLineAddTitleText, C('font', 'In', L.AddLineTitle + ' ,'))),
+						C('font', 'In', ' ' + L.SetDatabaseNumberOf + ': '),
 						this.SetLineNumText,	
 						this.SetLineNumButton
 					));
@@ -241,7 +241,7 @@ var AmysqlDatabaseAdd = function ()
 		this.ActionTr.td.className = 'ActionTd';
 		this.ActionTr.td.colSpan = this.IItem.length + 1;
 
-		C(this.ActionTr.td, 'In', [C('font', 'In', '新增数据库: '), this.AddTableLineText , this.AddTableLine, this.SetLine,  this.TIsubmit]);
+		C(this.ActionTr.td, 'In', [C('font', 'In', L.NewDatabase + ': '), this.AddTableLineText , this.AddTableLine, this.SetLine,  this.TIsubmit]);
 
 		this.ActionTr.appendChild(this.ActionTr.td);
 		this.table_tfoot.appendChild(this.ActionTr);
@@ -304,7 +304,7 @@ var AmysqlDatabaseAdd = function ()
 
 			if(SqlArr.length == 0)
 			{
-				alert('没有新增数据库。');
+				alert(L.NoNewDatabase);
 				Iline[0].IInput['DatabaseName'].focus();
 				return false;
 			}
@@ -325,19 +325,19 @@ var AmysqlDatabaseAdd = function ()
 			{
 				'MenuId':'AmysqlDatabaseAddFormMenu', 'AreaDomID':'AmysqlDatabaseAddForm',
 				'MenuList':[
-					{'id':'DAedit', 'name':'添加一数据库', 'ico':'ico_edit2', 'functions':function (){
+					{'id':'DAedit', 'name':L.AddADatabase, 'ico':'ico_edit2', 'functions':function (){
 						o.AddTableLine.onclick(1);
 					}},
-					{'id':'DAdel', 'name':'删除', 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
+					{'id':'DAdel', 'name':L.Del, 'KeyCodeTag':'D', 'ico':'ico_del2', 'functions':function (){
 						o.Iline[o.RightButtonRow].del.onclick();
 					}},					
 					{'className':'separator'},
-					{'id':'DAsaves', 'name':'保存', 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
+					{'id':'DAsaves', 'name':L.Save, 'KeyCodeTag':'S', 'ico':'ico_save2', 'functions':function (){
 						o.SetStatus = false;
 						o.AmysqlDatabaseAddForm.onsubmit();
 					}},
 					{'className': 'separator'},
-					{'id':'DArenovate', 'name':'重置数据库', 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
+					{'id':'DArenovate', 'name':L.ResetList, 'KeyCodeTag':'R', 'ico':'ico_renovate2', 'functions':function (){
 						o.SetLineNumButton.onclick();
 					}},
 				],

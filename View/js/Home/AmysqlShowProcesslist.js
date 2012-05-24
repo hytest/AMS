@@ -33,8 +33,8 @@ ExtendArray.push({
 	],
 	'_ExtendInfo':{
 			'ExtendId':'ShowProcesslist',
-			'ExtendName':'显示mysql进程',
-			'ExtendAbout':'mysql系统中正在运行的所有进程扩展。',
+			'ExtendName':L.ShowMysqlProcess,
+			'ExtendAbout':L.ShowMysqlProcessAbout,
 			'Version':'1.00',
 			'Date':'2012-04-06',
 			'WebSite':'http://amysql.com',
